@@ -1,3 +1,25 @@
 .App {
-    text-align: center;
+    min-height: 100vh;
+}
+/* projects page */
+.projects-page {
+    text-align: left;
+}
+.project-card {
+    margin: 0.5rem;
+}
+/* profile page */
+
+.profile-about {
+    padding: 2rem;
+    text-align: left;
+}
+.profile-contact {
+    color: gray;
+    font-style: italic;
+}
+
+.profile-edit-icon {
+    float: right;
+    cursor: pointer;
 }
