@@ -21,3 +21,23 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# UI
+# dependencies
+ui/node_modules
+ui/.pnp
+.pnp.js
+
+# production
+ui/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+ui/npm-debug.log*
+ui/yarn-debug.log*
+ui/yarn-error.log*
