@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Dashbaord from "./pages/Dashboard";
 import Layout from "./pages/Layout";
-import Projects from "./pages/Projects";
+import Project from "./pages/Project";
 import NoPage from "./pages/NoPage";
 import Profile from "./pages/Profile";
 
@@ -14,7 +14,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Dashbaord />} />
-                        <Route path="projects" element={<Projects />} />
+                        <Route path="project" element={<Project />} />
                         <Route path="profile" element={<Profile />} />
                         <Route path="*" element={<NoPage />} />
                     </Route>
