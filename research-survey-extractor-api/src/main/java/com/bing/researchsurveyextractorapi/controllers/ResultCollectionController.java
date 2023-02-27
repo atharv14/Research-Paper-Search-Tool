@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("${API_URI_PREFIX}/collections")
+@RequestMapping("/api/${API_VERSION_V1}/collections")
 public class ResultCollectionController {
 
     @GetMapping(path = "")

@@ -12,12 +12,13 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class SwaggerConfig {
 
+    private static final String BASE_PACKAGE_NAME = "com.bing.researchsurveyextractorapi";
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage(BASE_PACKAGE_NAME))
                 .paths(PathSelectors.any())
                 .build();
     }
