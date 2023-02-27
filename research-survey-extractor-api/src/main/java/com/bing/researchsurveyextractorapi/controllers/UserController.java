@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/${API_VERSION_V1}/users")
+@RequestMapping("${API_V1_URI}/users")
 public class UserController {
 
     private final UserService userService;
@@ -27,12 +27,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("{username}")
+    @GetMapping("/{username}")
     public UserDTO getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);
     }
 
-    @GetMapping("email/{email}")
+    @GetMapping("/email/{email}")
     public UserDTO getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }

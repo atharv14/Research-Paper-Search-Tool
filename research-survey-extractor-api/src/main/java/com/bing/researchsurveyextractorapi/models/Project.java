@@ -1,5 +1,7 @@
 package com.bing.researchsurveyextractorapi.models;
 
+import java.util.List;
+
 public class Project {
 
     private String projectID;
@@ -8,14 +10,16 @@ public class Project {
     private String projectOwner;
     private String[] collaborators;
     private Query[] queries;
+    private List<ResultCategory> resultCategories;
 
-    public Project(String projectID, String projectName, String description, String projectOwner, String[] collaborators, Query[] queries) {
+    public Project(String projectID, String projectName, String description, String projectOwner, String[] collaborators, Query[] queries, List<ResultCategory> resultCategories) {
         this.projectID = projectID;
         this.projectName = projectName;
         this.description = description;
         this.projectOwner = projectOwner;
         this.collaborators = collaborators;
         this.queries = queries;
+        this.resultCategories = resultCategories;
     }
 
     public String getProjectID() {
@@ -40,5 +44,9 @@ public class Project {
 
     public Query[] getQueries() {
         return queries;
+    }
+
+    public List<ResultCategory> getResultCategories() {
+        return resultCategories;
     }
 }
