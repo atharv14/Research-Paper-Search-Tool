@@ -1,17 +1,17 @@
 package com.bing.researchsurveyextractorapi.models;
 
-public class ProjectCategory {
+public class ResultCategory {
 
+    private String categoryID;
     private int priority;
     private String label;
     private String color;
-    private String projectID;
 
-    public ProjectCategory(int priority, String label, String color, String projectID) {
+    public ResultCategory(String categoryID, int priority, String label, String color) {
+        this.categoryID = categoryID;
         this.priority = priority;
         this.label = label;
         this.color = color;
-        this.projectID = projectID;
     }
 
     public int getPriority() {
@@ -26,7 +26,7 @@ public class ProjectCategory {
         return color;
     }
 
-    public String getProjectID() {
-        return projectID;
+    public String getCategoryID() {
+        return categoryID;
     }
 }
