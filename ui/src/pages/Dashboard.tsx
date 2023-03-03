@@ -1,21 +1,33 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ProjectCard from "../components/ProjectCard";
-
+import { getProjects } from "../api/project";
+import { useEffect, useState } from "react";
+import { projectType } from "../api/types";
 const Dashbaord = () => {
+    const [projects, setProjects] = useState<projectType[]>([]);
+    useEffect(() => {
+        const projectsData = getProjects();
+        setProjects(projectsData);
+    }, []);
+
     return (
-        <Container className="projects-page">
+        <Container className="dashboard-page">
             <h3>Projects</h3>
             <Container className="project-cards-wrapper">
                 <Row xs={1} md={3}>
-                    {[1, 2, 3, 4, 5].map((i) => (
-                        <Col>
+                    {projects.map((proj, i) => (
+                        <Col key={i}>
                             <Link
-                                to="/project"
+                                to={`/project/?id=${proj.id}`}
                                 style={{ textDecoration: "none" }}
                             >
                                 {" "}
-                                <ProjectCard key={i} />
+                                <ProjectCard
+                                    key={proj.id}
+                                    name={proj.name}
+                                    desc={proj.desc}
+                                />
                             </Link>
                         </Col>
                     ))}

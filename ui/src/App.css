@@ -1,12 +1,26 @@
 .App {
     min-height: 100vh;
 }
-/* projects page */
-.projects-page {
+
+/* dashboard page */
+.dashboard-page {
     text-align: left;
 }
 .project-card {
     margin: 0.5rem;
+}
+/* Project page */
+.project-page {
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.project-head {
+    align-items: center;
+}
+
+.query-builder {
+    margin-top: 1rem !important;
 }
 /* profile page */
 
