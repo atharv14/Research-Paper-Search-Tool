@@ -1,6 +1,6 @@
 package com.bing.researchsurveyextractorapi.service;
 
-import com.bing.researchsurveyextractorapi.models.ResultCollection;
+import com.bing.researchsurveyextractorapi.models.Collection;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,27 +8,27 @@ import java.util.List;
 @Service
 public class ResultCollectionServiceImpl implements ResultCollectionService {
     @Override
-    public void createResultCollection(ResultCollection collection) {
+    public void createResultCollection(Collection collection) {
 
     }
 
     @Override
-    public ResultCollection getResultCollection(String collectionID) {
+    public Collection getResultCollection(String collectionID) {
         return null;
     }
 
     @Override
-    public List<ResultCollection> getResultCollections(String projectID) {
+    public List<Collection> getResultCollections(String projectID) {
         return null;
     }
 
     @Override
-    public ResultCollection updateResultCollection(String collectionID, ResultCollection collection) {
+    public Collection updateResultCollection(String collectionID, Collection collection) {
         return null;
     }
 
     @Override
-    public ResultCollection deleteResultCollection(String collectionID) {
+    public Collection deleteResultCollection(String collectionID) {
         return null;
     }
 }

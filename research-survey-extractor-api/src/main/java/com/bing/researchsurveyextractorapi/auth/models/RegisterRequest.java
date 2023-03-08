@@ -1,4 +1,4 @@
-package com.bing.researchsurveyextractorapi.dto;
+package com.bing.researchsurveyextractorapi.auth.models;
 
 import lombok.*;
 
@@ -7,12 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserDTO {
-
-    private Long userId;
+public class RegisterRequest {
     private String username;
     private String email;
+    private String password;
     private String firstName;
     private String lastName;
-
 }

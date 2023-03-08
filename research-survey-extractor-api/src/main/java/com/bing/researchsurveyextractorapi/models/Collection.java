@@ -4,7 +4,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Objects;
 
 @Getter
@@ -14,37 +13,34 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Query {
+public class Collection {
 
     @Id
     @GeneratedValue
-    private Long queryId;
+    private Long collectionId;
 
     @Column(nullable = false)
-    private String searchText;
-
-    @Column(nullable = false)
-    private String datasource;
+    private String collectionName;
 
     @ManyToMany
     @JoinTable(
-            name = "query_results",
-            joinColumns = @JoinColumn(name = "query_id"),
+            name = "result_collections",
+            joinColumns = @JoinColumn(name = "collection_id"),
             inverseJoinColumns = @JoinColumn(name = "result_id")
     )
     @ToString.Exclude
-    private Collection<Result> results;
+    private java.util.Collection<Result> resultCollection;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Query query = (Query) o;
-        return getQueryId() != null && Objects.equals(getQueryId(), query.getQueryId());
+        Collection that = (Collection) o;
+        return getCollectionId() != null && Objects.equals(getCollectionId(), that.getCollectionId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(queryId, searchText, datasource);
+        return Objects.hash(collectionId, collectionName);
     }
 }
