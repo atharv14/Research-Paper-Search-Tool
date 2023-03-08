@@ -1,14 +1,18 @@
 package com.bing.researchsurveyextractorapi.service;
 
-import com.bing.researchsurveyextractorapi.models.ResultCollection;
+import com.bing.researchsurveyextractorapi.models.Collection;
 
 import java.util.List;
 
 public interface ResultCollectionService {
 
-    void createResultCollection(ResultCollection collection);
-    ResultCollection getResultCollection(String collectionID);
-    List<ResultCollection> getResultCollections(String projectID);
-    ResultCollection updateResultCollection(String collectionID, ResultCollection collection);
-    ResultCollection deleteResultCollection(String collectionID);
+    void createResultCollection(Collection collection);
+
+    Collection getResultCollection(String collectionID);
+
+    List<Collection> getResultCollections(String projectID);
+
+    Collection updateResultCollection(String collectionID, Collection collection);
+
+    Collection deleteResultCollection(String collectionID);
 }

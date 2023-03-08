@@ -1,6 +1,6 @@
 package com.bing.researchsurveyextractorapi.controllers;
 
-import com.bing.researchsurveyextractorapi.models.ResultCollection;
+import com.bing.researchsurveyextractorapi.models.Collection;
 import com.bing.researchsurveyextractorapi.service.ResultCollectionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,28 +18,28 @@ public class ResultCollectionController {
     }
 
     @GetMapping(path = "")
-    public List<ResultCollection> getResultCollection() {
-        return Arrays.asList(new ResultCollection(1, "1", null));
+    public List<Collection> getResultCollection() {
+        return Arrays.asList(new Collection(1L, "1", null));
     }
 
     @GetMapping("/{collectionID}")
-    public ResultCollection getResultCollection(@PathVariable String collectionID) {
+    public Collection getResultCollection(@PathVariable String collectionID) {
         return resultCollectionService.getResultCollection(collectionID);
     }
 
     @GetMapping("/project/{projectID}")
-    public List<ResultCollection> getResultCollections(@PathVariable String projectID) {
+    public List<Collection> getResultCollections(@PathVariable String projectID) {
         return resultCollectionService.getResultCollections(projectID);
     }
 
     @PostMapping("")
-    public void createResultCollection(ResultCollection resultCollection) {
-        resultCollectionService.createResultCollection(resultCollection);
+    public void createResultCollection(Collection collection) {
+        resultCollectionService.createResultCollection(collection);
     }
 
     @PutMapping("/{collectionID}")
-    public void updateResultCollection(@PathVariable String collectionID, ResultCollection resultCollection) {
-        resultCollectionService.updateResultCollection(collectionID, resultCollection);
+    public void updateResultCollection(@PathVariable String collectionID, Collection collection) {
+        resultCollectionService.updateResultCollection(collectionID, collection);
     }
 
     @DeleteMapping("/{collectionID}")

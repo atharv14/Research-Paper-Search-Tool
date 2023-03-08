@@ -1,52 +1,81 @@
 package com.bing.researchsurveyextractorapi.models;
 
-import java.util.List;
+import lombok.*;
+import org.hibernate.Hibernate;
 
+import javax.persistence.*;
+import java.util.Objects;
+
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Project {
 
-    private String projectID;
+    @Id
+    @GeneratedValue
+    @Column(nullable = false)
+    private Long projectId;
+
+    @Column(nullable = false)
     private String projectName;
+
+    @Column(nullable = false)
     private String description;
-    private String projectOwner;
-    private String[] collaborators;
-    private Query[] queries;
-    private List<ResultCategory> resultCategories;
 
-    public Project(String projectID, String projectName, String description, String projectOwner, String[] collaborators, Query[] queries, List<ResultCategory> resultCategories) {
-        this.projectID = projectID;
-        this.projectName = projectName;
-        this.description = description;
-        this.projectOwner = projectOwner;
-        this.collaborators = collaborators;
-        this.queries = queries;
-        this.resultCategories = resultCategories;
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "user_id")
+    private User owner;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "project_collaborators",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @ToString.Exclude
+    private java.util.Collection<User> collaborators;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "project_result_categories",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    @ToString.Exclude
+    private java.util.Collection<Category> categories;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "project_queries",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "query_id")
+    )
+    @ToString.Exclude
+    private java.util.Collection<Query> queries;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "project_collections",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "collection_id")
+    )
+    @ToString.Exclude
+    private java.util.Collection<Collection> collections;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Project project = (Project) o;
+        return getProjectId() != null && Objects.equals(getProjectId(), project.getProjectId());
     }
 
-    public String getProjectID() {
-        return projectID;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getProjectOwner() {
-        return projectOwner;
-    }
-
-    public String[] getCollaborators() {
-        return collaborators;
-    }
-
-    public Query[] getQueries() {
-        return queries;
-    }
-
-    public List<ResultCategory> getResultCategories() {
-        return resultCategories;
+    @Override
+    public int hashCode() {
+        return Objects.hash(projectId, projectName, description);
     }
 }

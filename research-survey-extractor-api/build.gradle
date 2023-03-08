@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.bing'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 sourceCompatibility = '1.8'
 
 
@@ -14,17 +14,30 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.session:spring-session-core'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.session:spring-session-core'
 
-	implementation group: "io.springfox", name: "springfox-boot-starter", version: "3.0.0"
+    implementation group: "io.springfox", name: "springfox-boot-starter", version: "3.0.0"
 
-	runtimeOnly 'org.postgresql:postgresql'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+//	JWT dependencies
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+//	lombok
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {

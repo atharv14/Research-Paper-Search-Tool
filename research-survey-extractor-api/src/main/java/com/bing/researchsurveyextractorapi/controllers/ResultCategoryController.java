@@ -1,6 +1,6 @@
 package com.bing.researchsurveyextractorapi.controllers;
 
-import com.bing.researchsurveyextractorapi.models.ResultCategory;
+import com.bing.researchsurveyextractorapi.models.Category;
 import com.bing.researchsurveyextractorapi.service.ResultCategoryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +17,22 @@ public class ResultCategoryController {
     }
 
     @GetMapping("/{categoryID}")
-    public ResultCategory getResultCategory(@PathVariable String categoryID) {
+    public Category getResultCategory(@PathVariable String categoryID) {
         return resultCategoryService.getResultCategory(categoryID);
     }
 
     @GetMapping("/project/{projectID}")
-    public List<ResultCategory> getResultCategories(@PathVariable String projectID) {
+    public List<Category> getResultCategories(@PathVariable String projectID) {
         return resultCategoryService.getResultCategories(projectID);
     }
 
     @PostMapping("")
-    public void createResultCategories(@RequestParam String projectID, ResultCategory[] categories) {
+    public void createResultCategories(@RequestParam String projectID, Category[] categories) {
         resultCategoryService.createResultCategory(projectID, categories);
     }
 
     @PutMapping("/{categoryID}")
-    public void updateResultCategory(@PathVariable String categoryID, ResultCategory category) {
+    public void updateResultCategory(@PathVariable String categoryID, Category category) {
         resultCategoryService.updateResultCategory(categoryID, category);
     }
 
@@ -42,7 +42,7 @@ public class ResultCategoryController {
     }
 
     @PatchMapping("/project/{projectID}")
-    public void addResultCategory(@PathVariable String projectID, ResultCategory category) {
+    public void addResultCategory(@PathVariable String projectID, Category category) {
         resultCategoryService.addResultCategory(projectID, category);
     }
 }

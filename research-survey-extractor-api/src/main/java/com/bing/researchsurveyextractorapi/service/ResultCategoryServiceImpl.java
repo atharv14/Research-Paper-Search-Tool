@@ -1,6 +1,6 @@
 package com.bing.researchsurveyextractorapi.service;
 
-import com.bing.researchsurveyextractorapi.models.ResultCategory;
+import com.bing.researchsurveyextractorapi.models.Category;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,27 +8,27 @@ import java.util.List;
 @Service
 public class ResultCategoryServiceImpl implements ResultCategoryService {
     @Override
-    public List<ResultCategory> getResultCategories(String projectID) {
+    public List<Category> getResultCategories(String projectID) {
         return null;
     }
 
     @Override
-    public ResultCategory getResultCategory(String categoryID) {
+    public Category getResultCategory(String categoryID) {
         return null;
     }
 
     @Override
-    public void createResultCategory(String projectID, ResultCategory[] categories) {
+    public void createResultCategory(String projectID, Category[] categories) {
 
     }
 
     @Override
-    public void addResultCategory(String projectID, ResultCategory category) {
+    public void addResultCategory(String projectID, Category category) {
 
     }
 
     @Override
-    public void updateResultCategory(String categoryID, ResultCategory category) {
+    public void updateResultCategory(String categoryID, Category category) {
 
     }
 

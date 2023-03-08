@@ -1,18 +1,29 @@
 package com.bing.researchsurveyextractorapi.service;
 
-import com.bing.researchsurveyextractorapi.dto.UserDTO;
+import com.bing.researchsurveyextractorapi.dto.UserPostDto;
+import com.bing.researchsurveyextractorapi.dto.UserPutDto;
 import com.bing.researchsurveyextractorapi.models.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
-    UserDTO authenticateUser(String username, String password);
-    List<UserDTO> getAllUsers();
-    UserDTO getUserByUsername(String username);
-    UserDTO getUserByEmail(String email);
-    void createUser(User user);
-    void updatePassword(User user, String oldPassword, String newPassword);
-    void updateUserDetails(User user);
+public interface UserService extends UserDetailsService {
+    List<User> loadAllUsers();
+
+    User loadUser(Long userId);
+
+    User loadUserByUsername(String username);
+
+    User loadUserByEmail(String email);
+
+    User createUser(UserPostDto user);
+
+    void changePassword(String username, String newPassword);
+
+    void updateUserDetails(Long userId, UserPutDto dto);
+
     boolean checkUserExistsByUsername(String username);
+
     boolean checkUserExistsByEmail(String email);
+
 }
