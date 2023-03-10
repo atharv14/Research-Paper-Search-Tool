@@ -22,14 +22,17 @@ const Project = () => {
         setQueries(updatedQueries ?? queries);
     };
     const addQuery = () => {
+        const newId = queries.length
+            ? queries[queries.length - 1]["id"] + 1
+            : 0;
         let newQuery: queryType = {
-            id: queries.length ? queries[queries.length - 1]["id"] + 1 : 0,
+            id: newId,
             name: "New Query",
             results: [],
             source: "MANUAL",
             text: "",
         };
-        setQueries([newQuery, ...queries]);
+        setQueries([...queries, newQuery]);
     };
     return (
         <Container className="project-page">

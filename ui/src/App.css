@@ -1,3 +1,6 @@
+@import "bootstrap/dist/css/bootstrap.css";
+@import "react-querybuilder/dist/query-builder.css";
+
 .App {
     min-height: 100vh;
 }
@@ -36,4 +39,10 @@
 .profile-edit-icon {
     float: right;
     cursor: pointer;
+}
+
+.queryBuilder .form-control,
+.form-select {
+    display: inline-block;
+    width: 80%;
 }
