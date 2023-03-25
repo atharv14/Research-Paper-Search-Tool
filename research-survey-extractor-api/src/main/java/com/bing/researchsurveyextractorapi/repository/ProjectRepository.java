@@ -12,7 +12,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Transactional
     @Modifying
     @Query("update Project p set p.projectName = ?1, p.description = ?2 where p.projectId = ?3")
-    void updateProjectNameAndDescriptionByProjectId(String projectName, String description, Long projectId);
+    void updateProjectNameAndDescriptionByProjectId(String projectName, String description, long projectId);
 
-    List<Project> findByOwner_Username(String username);
+    List<Project> findByOwnerUsername(String username);
 }

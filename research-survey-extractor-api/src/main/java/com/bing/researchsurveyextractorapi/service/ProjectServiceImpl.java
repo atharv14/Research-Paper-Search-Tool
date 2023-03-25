@@ -1,9 +1,9 @@
 package com.bing.researchsurveyextractorapi.service;
 
-import com.bing.researchsurveyextractorapi.dto.ProjectPostDto;
 import com.bing.researchsurveyextractorapi.exceptions.ProjectNotFoundException;
 import com.bing.researchsurveyextractorapi.models.Project;
 import com.bing.researchsurveyextractorapi.models.User;
+import com.bing.researchsurveyextractorapi.pojo.project.ProjectRequest;
 import com.bing.researchsurveyextractorapi.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,16 +19,16 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> loadAllProjectsForUser(String username) {
-        return projectRepository.findByOwner_Username(username);
+        return projectRepository.findByOwnerUsername(username);
     }
 
     @Override
-    public Project loadProjectByID(Long projectID) {
-        return projectRepository.findById(projectID).orElseThrow(() -> new ProjectNotFoundException(projectID));
+    public Project loadProjectById(long projectId) {
+        return projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 
     @Override
-    public Project createProject(ProjectPostDto dto, User user) {
+    public Project createProject(ProjectRequest dto, User user) {
         return projectRepository.save(
                 Project.builder()
                         .projectName(dto.getProjectName())
@@ -39,7 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void updateProject(Long projectId, ProjectPostDto updatedProject) {
+    public void updateProject(long projectId, ProjectRequest updatedProject) {
         if (projectRepository.existsById(projectId)) {
             String projectName = updatedProject.getProjectName();
             String description = updatedProject.getDescription();
@@ -50,7 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void deleteProject(Long projectId) {
+    public void deleteProject(long projectId) {
         if (projectRepository.existsById(projectId)) {
             projectRepository.deleteById(projectId);
         } else {

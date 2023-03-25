@@ -1,10 +1,10 @@
 package com.bing.researchsurveyextractorapi.service;
 
-import com.bing.researchsurveyextractorapi.dto.UserPostDto;
-import com.bing.researchsurveyextractorapi.dto.UserPutDto;
 import com.bing.researchsurveyextractorapi.exceptions.UserDoesNotExistException;
 import com.bing.researchsurveyextractorapi.mapper.UserMapper;
 import com.bing.researchsurveyextractorapi.models.User;
+import com.bing.researchsurveyextractorapi.pojo.user.UserRequest;
+import com.bing.researchsurveyextractorapi.pojo.user.UserUpdateRequest;
 import com.bing.researchsurveyextractorapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +25,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User loadUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistException("userId", userId.toString()));
+    public User loadUser(long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistException("userId", Long.toString(userId)));
     }
 
     @Override
@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(UserPostDto userDetails) {
-        User user = UserMapper.fromPostDto(userDetails);
+    public User createUser(UserRequest userRequest) {
+        User user = UserMapper.fromRequest(userRequest);
         return userRepository.save(user);
     }
 
@@ -55,11 +55,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserDetails(Long userId, UserPutDto dto) {
+    public void updateUserDetails(long userId, UserUpdateRequest dto) {
         if (userRepository.existsById(userId)) {
             userRepository.updateFirstNameAndLastNameAndEmailByUserId(dto.getFirstName(), dto.getLastName(), dto.getEmail(), userId);
         } else {
-            throw new UserDoesNotExistException("userId", userId.toString());
+            throw new UserDoesNotExistException("userId", Long.toString(userId));
         }
     }
 

@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -14,7 +15,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Query {
+@Table(name = "queries")
+public class Query implements Serializable {
 
     @Id
     @GeneratedValue
@@ -24,16 +26,16 @@ public class Query {
     private String searchText;
 
     @Column(nullable = false)
-    private String datasource;
+    private DatasourceApi datasource;
 
-    @ManyToMany
-    @JoinTable(
-            name = "query_results",
-            joinColumns = @JoinColumn(name = "query_id"),
-            inverseJoinColumns = @JoinColumn(name = "result_id")
-    )
     @ToString.Exclude
-    private Collection<Result> results;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "query")
+    private Collection<SearchResult> searchResults;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "project_id", nullable = false)
+    @ToString.Exclude
+    private Project project;
 
     @Override
     public boolean equals(Object o) {

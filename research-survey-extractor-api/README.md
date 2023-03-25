@@ -35,9 +35,9 @@ cd research-survey-extractor-api
 5. Now build the project
     1. By running below command if you're on a windows based system
    ```agsl
-   ./gradlew.bat build
+   .\gradlew.bat build
     ```
-    2. Else run below command if you're on an unix based system
+    2. Else run below command if you're using unix based system
    ```agsl
    ./gradlew build
    ```
@@ -50,7 +50,7 @@ java -jar build/libs/research-survey-extractor-api-1.0.jar
 Note: If the above jar doesn't exist, probably the version might have changed, replace with the jar having similar name
 pattern that is present on relative path: `build/libs`
 
-7. Once the server is up, then you shall find a message similar to this:
+1. Once the server is up, then you shall find a message similar to this:
 
 ```agsl
 Started ResearchSurveyExtractorApiApplication in x.xxx seconds

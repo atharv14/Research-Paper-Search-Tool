@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.Objects;
 
 @Getter
@@ -13,7 +15,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Project {
+@Table(name = "projects")
+public class Project implements Serializable {
 
     @Id
     @GeneratedValue
@@ -37,34 +40,19 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @ToString.Exclude
-    private java.util.Collection<User> collaborators;
+    private Collection<User> collaborators;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "project_result_categories",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
     @ToString.Exclude
-    private java.util.Collection<Category> categories;
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "project")
+    private Collection<Category> categories;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "project_queries",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "query_id")
-    )
     @ToString.Exclude
-    private java.util.Collection<Query> queries;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    private Collection<Query> queries;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "project_collections",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "collection_id")
-    )
     @ToString.Exclude
-    private java.util.Collection<Collection> collections;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private Collection<DocumentCollection> documentCollections;
 
     @Override
     public boolean equals(Object o) {

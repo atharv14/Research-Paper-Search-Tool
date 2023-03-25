@@ -1,9 +1,9 @@
 package com.bing.researchsurveyextractorapi.controllers;
 
-import com.bing.researchsurveyextractorapi.dto.ProjectDto;
-import com.bing.researchsurveyextractorapi.dto.ProjectPostDto;
 import com.bing.researchsurveyextractorapi.mapper.ProjectMapper;
 import com.bing.researchsurveyextractorapi.models.User;
+import com.bing.researchsurveyextractorapi.pojo.project.ProjectDto;
+import com.bing.researchsurveyextractorapi.pojo.project.ProjectRequest;
 import com.bing.researchsurveyextractorapi.service.ProjectService;
 import com.bing.researchsurveyextractorapi.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,24 +27,24 @@ public class ProjectController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{projectID}")
-    public ProjectDto getProject(@PathVariable Long projectID) {
-        return ProjectMapper.toDto(projectService.loadProjectByID(projectID));
+    @GetMapping("/{projectId}")
+    public ProjectDto getProject(@PathVariable long projectId) {
+        return ProjectMapper.toDto(projectService.loadProjectById(projectId));
     }
 
     @PostMapping("")
-    public ProjectDto createProject(@RequestBody ProjectPostDto dto) {
+    public ProjectDto createProject(@RequestBody ProjectRequest request) {
         User user = AuthUtils.getLoggedInUser();
-        return ProjectMapper.toDto(projectService.createProject(dto, user));
+        return ProjectMapper.toDto(projectService.createProject(request, user));
     }
 
-    @PutMapping("/{projectID}")
-    public void updateProject(@PathVariable Long projectID, @RequestBody ProjectPostDto dto) {
-        projectService.updateProject(projectID, dto);
+    @PutMapping("/{projectId}")
+    public void updateProject(@PathVariable long projectId, @RequestBody ProjectRequest request) {
+        projectService.updateProject(projectId, request);
     }
 
-    @DeleteMapping("/{projectID}")
-    public void deleteProject(@PathVariable Long projectID) {
-        projectService.deleteProject(projectID);
+    @DeleteMapping("/{projectId}")
+    public void deleteProject(@PathVariable long projectId) {
+        projectService.deleteProject(projectId);
     }
 }

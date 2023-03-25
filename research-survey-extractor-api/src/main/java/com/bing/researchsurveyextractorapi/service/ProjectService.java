@@ -1,19 +1,19 @@
 package com.bing.researchsurveyextractorapi.service;
 
-import com.bing.researchsurveyextractorapi.dto.ProjectPostDto;
 import com.bing.researchsurveyextractorapi.models.Project;
 import com.bing.researchsurveyextractorapi.models.User;
+import com.bing.researchsurveyextractorapi.pojo.project.ProjectRequest;
 
 import java.util.List;
 
 public interface ProjectService {
     List<Project> loadAllProjectsForUser(String username);
 
-    Project loadProjectByID(Long projectID);
+    Project loadProjectById(long projectId);
 
-    Project createProject(ProjectPostDto dto, User user);
+    Project createProject(ProjectRequest dto, User user);
 
-    void updateProject(Long Long, ProjectPostDto project);
+    void updateProject(long projectId, ProjectRequest project);
 
-    void deleteProject(Long projectID);
+    void deleteProject(long projectId);
 }

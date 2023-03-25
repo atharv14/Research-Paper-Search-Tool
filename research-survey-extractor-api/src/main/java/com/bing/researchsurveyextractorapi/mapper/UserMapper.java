@@ -1,26 +1,29 @@
 package com.bing.researchsurveyextractorapi.mapper;
 
-import com.bing.researchsurveyextractorapi.dto.UserDTO;
-import com.bing.researchsurveyextractorapi.dto.UserPostDto;
 import com.bing.researchsurveyextractorapi.models.User;
+import com.bing.researchsurveyextractorapi.pojo.user.UserDto;
+import com.bing.researchsurveyextractorapi.pojo.user.UserRequest;
 
 public class UserMapper {
 
+    private UserMapper() {
+        throw new IllegalStateException("Mapper class");
+    }
 
-    public static User fromPostDto(UserPostDto userDetails) {
+    public static User fromRequest(UserRequest userRequest) {
         return User
                 .builder()
-                .firstName(userDetails.getFirstName())
-                .lastName(userDetails.getLastName())
-                .email(userDetails.getEmail())
-                .username(userDetails.getUsername())
-                .password(userDetails.getPassword())
-                .role(userDetails.getUserRole())
+                .firstName(userRequest.getFirstName())
+                .lastName(userRequest.getLastName())
+                .email(userRequest.getEmail())
+                .username(userRequest.getUsername())
+                .password(userRequest.getPassword())
+                .role(userRequest.getUserRole())
                 .build();
     }
 
-    public static UserDTO toDto(User user) {
-        return UserDTO.builder()
+    public static UserDto toDto(User user) {
+        return UserDto.builder()
                 .userId(user.getUserId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

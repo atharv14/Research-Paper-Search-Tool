@@ -23,6 +23,7 @@ public class SwaggerConfig {
 
     private static final String BASE_PACKAGE_NAME = "com.bing.researchsurveyextractorapi";
     private static final String API_V1 = "/api/v1";
+
     @Bean
     public Docket apiV1() {
         return new Docket(DocumentationType.SWAGGER_2)

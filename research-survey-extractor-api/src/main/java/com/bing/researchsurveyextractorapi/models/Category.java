@@ -3,10 +3,8 @@ package com.bing.researchsurveyextractorapi.models;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
@@ -16,7 +14,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Category {
+@Table(name = "categories")
+public class Category implements Serializable {
 
     @Id
     @GeneratedValue
@@ -30,6 +29,11 @@ public class Category {
 
     @Column(nullable = false)
     private String color;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "project_id", nullable = false)
+    @ToString.Exclude
+    private Project project;
 
     @Override
     public boolean equals(Object o) {

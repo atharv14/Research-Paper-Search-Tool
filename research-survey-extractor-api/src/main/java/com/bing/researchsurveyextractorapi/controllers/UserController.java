@@ -1,12 +1,13 @@
 package com.bing.researchsurveyextractorapi.controllers;
 
-import com.bing.researchsurveyextractorapi.dto.UserDTO;
-import com.bing.researchsurveyextractorapi.dto.UserPostDto;
-import com.bing.researchsurveyextractorapi.dto.UserPutDto;
 import com.bing.researchsurveyextractorapi.mapper.UserMapper;
 import com.bing.researchsurveyextractorapi.models.User;
+import com.bing.researchsurveyextractorapi.pojo.user.UserDto;
+import com.bing.researchsurveyextractorapi.pojo.user.UserRequest;
+import com.bing.researchsurveyextractorapi.pojo.user.UserUpdateRequest;
 import com.bing.researchsurveyextractorapi.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public List<UserDTO> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userService.loadAllUsers()
                 .stream()
                 .map(UserMapper::toDto)
@@ -28,29 +29,30 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public UserDTO getUser(@PathVariable Long userId) {
+    public UserDto getUser(@PathVariable long userId) {
         return UserMapper.toDto(userService.loadUser(userId));
     }
 
     @GetMapping("/{username}")
-    public UserDTO getUserByUsername(@PathVariable String username) {
+    public UserDto getUserByUsername(@PathVariable String username) {
         User user = userService.loadUserByUsername(username);
         return UserMapper.toDto(user);
     }
 
     @GetMapping("/email/{email}")
-    public UserDTO getUserByEmail(@PathVariable String email) {
+    public UserDto getUserByEmail(@PathVariable String email) {
         User user = userService.loadUserByEmail(email);
         return UserMapper.toDto(user);
     }
 
     @PostMapping("")
-    public void registerUser(UserPostDto dto) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void registerUser(UserRequest dto) {
         userService.createUser(dto);
     }
 
     @PutMapping("/{userId}")
-    public void updateUserDetails(@PathVariable Long userId, UserPutDto dto) {
+    public void updateUserDetails(@PathVariable long userId, UserUpdateRequest dto) {
         userService.updateUserDetails(userId, dto);
     }
 

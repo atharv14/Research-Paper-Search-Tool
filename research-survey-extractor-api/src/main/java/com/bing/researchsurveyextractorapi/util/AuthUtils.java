@@ -6,6 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class AuthUtils {
 
+    private AuthUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String getLoggedInUsername() {
         Object principal = getLoggedInPrincipal();
         return (principal instanceof UserDetails) ? ((UserDetails) principal).getUsername() : principal.toString();
