@@ -5,6 +5,22 @@
     min-height: 100vh;
 }
 
+/* Auth Page */
+.auth-page {
+    margin-top: 2rem;
+}
+.auth-tabs {
+    text-align: center;
+    margin: auto;
+}
+.auth-tabs form {
+    text-align: left;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 60%;
+}
 /* dashboard page */
 .dashboard-page {
     text-align: left;

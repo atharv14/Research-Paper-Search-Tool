@@ -6,6 +6,7 @@ import Layout from "./pages/Layout";
 import Project from "./pages/Project";
 import NoPage from "./pages/NoPage";
 import Profile from "./pages/Profile";
+import Auth from "./pages/Auth";
 
 const App = () => {
     return (
@@ -16,6 +17,7 @@ const App = () => {
                         <Route index element={<Dashbaord />} />
                         <Route path="project" element={<Project />} />
                         <Route path="profile" element={<Profile />} />
+                        <Route path="auth" element={<Auth />} />
                         <Route path="*" element={<NoPage />} />
                     </Route>
                 </Routes>

@@ -13,6 +13,9 @@ const MyNavbar = () => {
                         <Nav.Link as={Link} to="/profile">
                             Profile
                         </Nav.Link>
+                        <Nav.Link as={Link} to="/auth">
+                            Login/Signup
+                        </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
