@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../api/user";
 
 interface loginFormPropsType {
     toggleTab: () => void;
 }
 
 const LoginForm = ({ toggleTab }: loginFormPropsType) => {
-    const [email, setEmail] = useState("");
+    const navigate = useNavigate();
+    const [username, setUsername] = useState("");
     const [pass, setPass] = useState("");
 
     const handleSubmit = (e: React.MouseEvent) => {
         e.preventDefault();
-        console.log(email, pass);
+        loginUser({ username: username, password: pass })
+            .then((res) => navigate("/"))
+            .catch((e) => alert(e));
     };
 
     return (
@@ -19,13 +24,12 @@ const LoginForm = ({ toggleTab }: loginFormPropsType) => {
             <h2>Login</h2>
             <Form className="login-form">
                 <Form.Group className="mb-3">
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Username</Form.Label>
                     <Form.Control
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        type="email"
-                        placeholder="youremail@gmail.com"
-                        id="email"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        type="text"
+                        placeholder="John Doe"
                     />
                 </Form.Group>
                 <Form.Group className="mb-3">

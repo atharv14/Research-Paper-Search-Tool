@@ -14,14 +14,17 @@ const initialQuery: RuleGroupType = {
     rules: [],
 };
 
-const QueryInput = () => {
+interface queryInputProps {
+    qId: number;
+}
+
+const QueryInput = ({ qId }: queryInputProps) => {
     const [query, setQuery] = useState(initialQuery);
     const [queryString, setQueryString] = useState("");
 
     const handleQueryChange = (q: RuleGroupType) => {
         setQuery(q);
         const qString = formatQuery(q, "sql").replaceAll("keyword = ", "");
-        console.log(qString);
         setQueryString(qString);
     };
 
@@ -36,7 +39,9 @@ const QueryInput = () => {
                 />
             </QueryBuilderBootstrap>
             <Container className="p-2">
-                <h5>Query : {queryString}</h5>
+                <h5>
+                    Query : <span id={"query_" + qId}>{queryString}</span>
+                </h5>
             </Container>
         </Container>
     );

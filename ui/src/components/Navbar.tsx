@@ -1,6 +1,12 @@
-import { Navbar, Container, Nav } from "react-bootstrap";
+import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-const MyNavbar = () => {
+
+interface navbarPropsType {
+    isLoggedIn: boolean;
+    handleLogout: () => void;
+}
+
+const MyNavbar = ({ isLoggedIn, handleLogout }: navbarPropsType) => {
     return (
         <Navbar bg="dark" variant="dark" fixed="top">
             <Container>
@@ -10,12 +16,24 @@ const MyNavbar = () => {
                         <Nav.Link as={Link} to="/">
                             Dashboard
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/profile">
-                            Profile
-                        </Nav.Link>
-                        <Nav.Link as={Link} to="/auth">
-                            Login/Signup
-                        </Nav.Link>
+                        {isLoggedIn && (
+                            <>
+                                <Nav.Link as={Link} to="/profile">
+                                    Profile
+                                </Nav.Link>
+                                <Button
+                                    variant="outline-danger"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </Button>
+                            </>
+                        )}
+                        {!isLoggedIn && (
+                            <Nav.Link as={Link} to="/auth">
+                                Login/Signup
+                            </Nav.Link>
+                        )}
                     </Nav>
                 </Navbar.Collapse>
             </Container>

@@ -2,7 +2,7 @@ import { userData } from "./dummyData";
 import { userType } from "./types";
 import axios from "axios";
 import { API_URI } from "./constants";
-import { getToken } from "./utility";
+import { getToken, setToken } from "./utility";
 
 const config = {
     headers: {
@@ -23,34 +23,29 @@ type registerUserBody = {
     username: string;
 };
 
-const registerUser = (data: registerUserBody) => {
+const registerUser = async (data: registerUserBody) => {
+    console.log("registering User", data);
     const url = API_URI + "/auth/signup";
-
-    axios
-        .post(url, data, config)
-        .then((resp) => {
-            console.log(resp.data);
-            alert("success");
-            return true;
-        })
-        .catch((e) => {
-            alert("failed");
-            console.log(e);
-        });
+    const resp = await axios.post(url, data);
+    console.log(resp);
+    const { authToken } = resp.data;
+    setToken(authToken);
+    return true;
 };
 
-// const login = (data: loginUserBody) => {
-//     const url = API_URI + "/auth/signup";
+type loginUserBody = {
+    username: string;
+    password: string;
+};
 
-//     axios
-//         .post(url, data, config)
-//         .then((resp) => {
-//             console.log(resp.data);
-//             return true;
-//         })
-//         .catch((e) => {
-//             console.log(e);
-//         });
-// };
+const loginUser = async (data: loginUserBody) => {
+    console.log("Login in User", data);
+    const url = API_URI + "/auth/signin";
+    const resp = await axios.post(url, data);
+    console.log(resp);
+    const { authToken } = resp.data;
+    setToken(authToken);
+    return true;
+};
 
-export { getUser, registerUser };
+export { getUser, registerUser, loginUser };
