@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { registerUser } from "../api/user";
 
 interface registerFormPropsType {
     toggleTab: () => void;
@@ -12,7 +13,14 @@ const RegisterForm = ({ toggleTab }: registerFormPropsType) => {
 
     const handleSubmit = (e: React.MouseEvent) => {
         e.preventDefault();
-        console.log(name, email, pass);
+        const res = registerUser({
+            email,
+            password: pass,
+            username: name,
+            firstName: "",
+            lastName: "",
+        });
+        console.log(res);
     };
 
     return (
