@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api/user";
 
 interface registerFormPropsType {
@@ -7,20 +8,24 @@ interface registerFormPropsType {
 }
 
 const RegisterForm = ({ toggleTab }: registerFormPropsType) => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const [name, setName] = useState("");
 
     const handleSubmit = (e: React.MouseEvent) => {
         e.preventDefault();
-        const res = registerUser({
+        registerUser({
             email,
             password: pass,
             username: name,
             firstName: "",
             lastName: "",
-        });
-        console.log(res);
+        })
+            .then((res) => {
+                navigate("/");
+            })
+            .catch((e) => alert(e));
     };
 
     return (
