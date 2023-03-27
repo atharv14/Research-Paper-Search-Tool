@@ -1,19 +1,15 @@
 import axios from "axios";
 import { API_URI } from "./constants";
-import { getToken } from "./utility";
+import { getConfig } from "./utility";
 
 type searchBody = {
     datasource: string;
     queryText: string;
 };
 
-const config = {
-    headers: {
-        Authorization: `Bearer ${getToken()}`,
-    },
-};
-
 const search = async (data: searchBody) => {
+    const config = getConfig();
+
     console.log("Searching", data);
     const url =
         API_URI + "/search/" + data.datasource + "?queryText=" + data.queryText;

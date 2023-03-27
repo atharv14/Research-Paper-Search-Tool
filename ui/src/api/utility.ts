@@ -1,5 +1,6 @@
 const getToken = () => {
-    return localStorage.getItem("token") || false;
+    const token = localStorage.getItem("token");
+    return token;
 };
 
 const setToken = (token: string) => {
@@ -14,4 +15,13 @@ const isUserLoggedIn = () => {
     return getToken();
 };
 
-export { getToken, setToken, isUserLoggedIn, unsetToken };
+const getConfig = () => {
+    const token = getToken();
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+};
+
+export { getToken, setToken, isUserLoggedIn, unsetToken, getConfig };
