@@ -8,6 +8,7 @@ import {
     Row,
     Table,
 } from "react-bootstrap";
+import { search } from "../api/search";
 import { queryType } from "../api/types";
 import QueryInput from "./QueryBuilder";
 
@@ -17,6 +18,17 @@ type QueryAccordianProps = {
 };
 
 const QueryAccordian = ({ queries, removeQuery }: QueryAccordianProps) => {
+    const searchQuery = (id: number) => {
+        const datasource = (
+            document.getElementById("#source_" + id) as HTMLInputElement
+        )?.value;
+        const queryText = (
+            document.getElementById("#query_" + id) as HTMLInputElement
+        )?.value;
+        const data = search({ datasource, queryText });
+        console.log(data);
+    };
+
     return (
         <Container className="query-builder p-0">
             <Accordion defaultActiveKey="0" alwaysOpen>
@@ -26,12 +38,32 @@ const QueryAccordian = ({ queries, removeQuery }: QueryAccordianProps) => {
                             <Accordion.Header>{query.name}</Accordion.Header>
                             <Accordion.Body>
                                 <Row>
-                                    <Col xs="10">
-                                        <QueryInput />
+                                    <Col md="10">
+                                        <QueryInput qId={query.id} />
                                     </Col>
-                                    <Col>
-                                        <ButtonGroup className="mb-2">
-                                            <Button variant="success">
+                                    <Col md="2">
+                                        <Form.Select
+                                            id={"source_" + query.id.toString()}
+                                            defaultValue=""
+                                        >
+                                            <option disabled value="">
+                                                Datasource
+                                            </option>
+                                            <option value="ieee">IEEE</option>
+                                            <option value="wos">
+                                                Web Of Science
+                                            </option>
+                                            <option value="pubmed">
+                                                Pubmed
+                                            </option>
+                                        </Form.Select>
+                                        <ButtonGroup className="mb-2 mt-4">
+                                            <Button
+                                                variant="success"
+                                                onClick={() =>
+                                                    searchQuery(query.id)
+                                                }
+                                            >
                                                 FETCH
                                             </Button>
                                             <Button
