@@ -13,19 +13,14 @@ const config = {
     },
 };
 
-const search = (data: searchBody) => {
+const search = async (data: searchBody) => {
+    console.log("Searching", data);
     const url =
         API_URI + "/search/" + data.datasource + "?queryText=" + data.queryText;
 
-    axios
-        .get(url, config)
-        .then((resp) => {
-            console.log(resp.data);
-            return resp.data;
-        })
-        .catch((e) => {
-            console.log(e);
-        });
+    const resp = await axios.get(url, config);
+    console.log(resp.data);
+    return resp.data.slice(0, 10);
 };
 
 export { search };

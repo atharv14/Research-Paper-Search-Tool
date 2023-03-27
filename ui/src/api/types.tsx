@@ -20,12 +20,14 @@ export type queryType = {
     id: number;
     name: string;
     text: string;
-    source: "SCOPUS" | "IEEE" | "MANUAL";
+    source: "ieee" | "wos" | "pubmed";
     results: resultType[];
 };
 
 export type resultType = {
     id: number;
     title: string;
-    link: string;
+    // link: string;
+    articleDate: string;
+    issn: string;
 };
