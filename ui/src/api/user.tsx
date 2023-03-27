@@ -39,18 +39,23 @@ const registerUser = (data: registerUserBody) => {
         });
 };
 
-// const login = (data: loginUserBody) => {
-//     const url = API_URI + "/auth/signup";
+type loginUserBody = {
+    username: string;
+    password: string;
+};
 
-//     axios
-//         .post(url, data, config)
-//         .then((resp) => {
-//             console.log(resp.data);
-//             return true;
-//         })
-//         .catch((e) => {
-//             console.log(e);
-//         });
-// };
+const login = (data: loginUserBody) => {
+    const url = API_URI + "/auth/signin";
 
-export { getUser, registerUser };
+    axios
+        .post(url, data, config)
+        .then((resp) => {
+            console.log(resp.data);
+            return true;
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+};
+
+export { getUser, registerUser, login };
