@@ -1,5 +1,6 @@
 package com.bing.researchsurveyextractorapi.service;
 
+import com.bing.researchsurveyextractorapi.models.DatasourceApi;
 import com.bing.researchsurveyextractorapi.models.Document;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +45,7 @@ public class PubmedSearchService implements SearchService{
 
     @Override
     public String getServiceName() {
-        return "pubmed";
+        return DatasourceApi.PUBMED.getName();
     }
 
     @Override

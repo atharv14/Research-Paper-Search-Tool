@@ -1,5 +1,6 @@
 package com.bing.researchsurveyextractorapi.service;
 
+import com.bing.researchsurveyextractorapi.models.DatasourceApi;
 import com.bing.researchsurveyextractorapi.models.Document;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,7 @@ public class ScopusSearchService implements SearchService {
 
     @Override
     public String getServiceName() {
-        return "scopus";
+        return DatasourceApi.SCOPUS.getName();
     }
 
     @Override

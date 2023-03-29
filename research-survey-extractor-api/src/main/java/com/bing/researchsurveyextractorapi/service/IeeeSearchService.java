@@ -1,5 +1,6 @@
 package com.bing.researchsurveyextractorapi.service;
 
+import com.bing.researchsurveyextractorapi.models.DatasourceApi;
 import com.bing.researchsurveyextractorapi.models.Document;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,7 @@ public class IeeeSearchService implements SearchService{
 
     @Override
     public String getServiceName() {
-        return "ieee";
+        return DatasourceApi.IEEE.getName();
     }
 
     @Override
@@ -62,7 +63,7 @@ public class IeeeSearchService implements SearchService{
         String authorName = " ";
         String affiliationCountry = "Not Found";
         String publicationName = "Not Found";
-        String issn = "Not Found";
+        String issn;
         String affiliationName = " ";
 
         try {
@@ -102,8 +103,12 @@ public class IeeeSearchService implements SearchService{
                     publicationName = articleNode.get("publication_title").asText();
                 }
                 //issn
-                if (articleNode.get("issn").asText() != null){
+                if (articleNode.has("issn") && articleNode.get("issn").isTextual()){
                     issn = articleNode.get("issn").asText();
+                } else if (articleNode.has("isbn") && articleNode.get("isbn").isTextual()) {
+                    issn = articleNode.get("isbn").asText();
+                } else {
+                    issn = "Not Found";
                 }
                 //Affiliation Name
                 if (authorsNode != null) {

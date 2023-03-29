@@ -1,5 +1,6 @@
 package com.bing.researchsurveyextractorapi.service;
 
+import com.bing.researchsurveyextractorapi.models.DatasourceApi;
 import com.bing.researchsurveyextractorapi.models.Document;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,9 +17,13 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class WosSearchService implements SearchService {
+
+    private static final Logger LOGGER = Logger.getLogger(
+            Thread.currentThread().getStackTrace()[0].getClassName() );
 
     @Value("${api.wos.key}")
     private String xApiKey;
@@ -42,7 +47,7 @@ public class WosSearchService implements SearchService {
 
     @Override
     public String getServiceName() {
-        return "wos";
+        return DatasourceApi.WOS.getName();
     }
 
     @Override
@@ -66,9 +71,9 @@ public class WosSearchService implements SearchService {
 
         URI apiUrl = UriComponentsBuilder.fromUri(URI.create(apiWosUrl))
                 .queryParam("databaseId", dataBaseId)
+                .queryParam("firstRecord", firstRecord)
                 .queryParam("usrQuery", query)
                 .queryParam("count", count)
-                .queryParam("firstRecord", firstRecord)
                 .build()
                 .toUri();
 
@@ -88,18 +93,24 @@ public class WosSearchService implements SearchService {
         try {
             JsonNode root = objectMapper.readTree(response);
             JsonNode dataNode = root.path("Data");
-
             for (JsonNode documentNode : dataNode) {
                 //Title
                 if (documentNode.get("Title").get("Title").get(0) != null){
+                    LOGGER.info("Logging an title message");
+                    LOGGER.info(title);
                     title = documentNode.get("Title").get("Title").get(0).asText();
+                    LOGGER.info(title);
                 }
                 //Article Date
                 JsonNode sourceNode = documentNode.get("Source");
-                if (sourceNode.get("Published.BiblioDate").get(0) != null && sourceNode.get("Published.BiblioYear").get(0) != null){
-                    articleDate = sourceNode.get("Published.BiblioDate").get(0).asText() + "," +
-                            sourceNode.get("Published.BiblioYear").get(0).asText();
-                }else {
+                if (sourceNode != null){
+                    if (sourceNode.get("Published.BiblioDate") != null && sourceNode.get("Published.BiblioYear") != null) {
+                        articleDate = sourceNode.get("Published.BiblioDate").get(0).asText() + "," +
+                                sourceNode.get("Published.BiblioYear").get(0).asText();
+                    } else {
+                        articleDate = "Not Found";
+                    }
+                } else {
                     articleDate = "Not Found";
                 }
                 //Author Name
