@@ -44,20 +44,15 @@ const ResultSetAccordian = ({ queries }: ResultAccordianProps) => {
                                         <tr>
                                             <th>#</th>
                                             <th>title</th>
-                                            <th>link</th>
                                             <th>source</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {results.map(
-                                            (
-                                                { id, title, link, source },
-                                                i
-                                            ) => (
+                                            ({ id, title, source }, i) => (
                                                 <tr key={i}>
                                                     <td>{i + 1}</td>
                                                     <td>{title}</td>
-                                                    <td>{link}</td>
                                                     <td>{source}</td>
                                                 </tr>
                                             )

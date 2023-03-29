@@ -9,7 +9,7 @@ services:
     depends_on:
       - research_survey_automator_db
     ports:
-      - 9090:8080
+      - "9090:8080"
     environment:
       - SPRING_DATASOURCE_HOST=research_survey_automator_db
       - SPRING_DATASOURCE_USERNAME=compose-postgres
