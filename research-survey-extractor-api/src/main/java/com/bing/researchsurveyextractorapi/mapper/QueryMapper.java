@@ -1,13 +1,14 @@
 package com.bing.researchsurveyextractorapi.mapper;
 
-import com.bing.researchsurveyextractorapi.models.Category;
-import com.bing.researchsurveyextractorapi.models.DatasourceApi;
-import com.bing.researchsurveyextractorapi.models.Project;
-import com.bing.researchsurveyextractorapi.models.Query;
+import com.bing.researchsurveyextractorapi.models.*;
 import com.bing.researchsurveyextractorapi.pojo.query.QueryDto;
 import com.bing.researchsurveyextractorapi.pojo.query.QueryRequest;
+import com.bing.researchsurveyextractorapi.pojo.searchresult.SearchResultDto;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class QueryMapper {
@@ -19,18 +20,24 @@ public class QueryMapper {
     public static QueryDto toDto(Query query) {
         return QueryDto.builder()
                 .queryId(query.getQueryId())
-                .datasource(query.getDatasource())
                 .searchText(query.getSearchText())
-                .searchResults(SearchResultMapper.toDto(query.getSearchResults()))
+                .searchResults(groupSearchResultsByDatasource(query.getSearchResults()))
                 .build();
     }
 
+    private static Map<DatasourceApi, List<SearchResultDto>> groupSearchResultsByDatasource(Collection<SearchResult> searchResults) {
+        return SearchResultMapper.toDto(searchResults)
+                .stream()
+                .collect(Collectors.groupingBy(SearchResultDto::getDatasource));
+    }
+
     public static Query toQuery(QueryRequest request, Project project, Collection<Category> categories) {
-        return Query.builder()
-                .datasource(DatasourceApi.valueOf(request.getDatasource()))
+        Query query = Query.builder()
                 .searchText(request.getSearchText())
                 .project(project)
                 .searchResults(SearchResultMapper.toSearchResults(request.getSearchResults(), categories))
                 .build();
+        query.getSearchResults().forEach(searchResult -> searchResult.setQuery(query));
+        return query;
     }
 }

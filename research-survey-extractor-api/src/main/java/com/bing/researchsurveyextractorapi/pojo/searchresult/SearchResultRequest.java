@@ -9,5 +9,5 @@ import lombok.*;
 @ToString
 public class SearchResultRequest {
     private String data;
-    private int category;
+    private int priority;
 }

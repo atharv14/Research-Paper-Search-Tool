@@ -6,6 +6,7 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,7 +32,7 @@ public class DocumentCollection implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "result_id")
     )
     @ToString.Exclude
-    private java.util.Collection<SearchResult> searchResults;
+    private Set<SearchResult> searchResults;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "project_id", nullable = false)

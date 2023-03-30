@@ -25,9 +25,6 @@ public class Query implements Serializable {
     @Column(nullable = false)
     private String searchText;
 
-    @Column(nullable = false)
-    private DatasourceApi datasource;
-
     @ToString.Exclude
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "query")
     private Collection<SearchResult> searchResults;
@@ -47,6 +44,6 @@ public class Query implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(queryId, searchText, datasource);
+        return Objects.hash(queryId);
     }
 }
