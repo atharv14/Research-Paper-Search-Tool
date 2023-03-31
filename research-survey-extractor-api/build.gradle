@@ -36,6 +36,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
     runtimeOnly 'org.postgresql:postgresql'
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-55:3.3.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

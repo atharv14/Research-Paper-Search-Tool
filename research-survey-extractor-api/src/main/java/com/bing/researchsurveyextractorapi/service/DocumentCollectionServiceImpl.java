@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -44,16 +44,15 @@ public class DocumentCollectionServiceImpl implements DocumentCollectionService 
     @Override
     public void updateSearchResultsInDocumentCollection(long collectionId, Collection<Long> searchResultIds) {
         DocumentCollection documentCollection = documentCollectionRepository.findById(collectionId).orElseThrow(() -> new DocumentCollectionNotFoundException(collectionId));
-        List<SearchResult> searchResults = getSearchResultsByIds(searchResultIds);
-        documentCollection.getSearchResults().clear();
-        documentCollection.setSearchResults(searchResults);
+        Set<SearchResult> searchResults = getSearchResultsByIds(searchResultIds);
+        documentCollection.getSearchResults().addAll(searchResults);
         documentCollectionRepository.save(documentCollection);
     }
 
-    private List<SearchResult> getSearchResultsByIds(Collection<Long> searchResultIds) {
+    private Set<SearchResult> getSearchResultsByIds(Collection<Long> searchResultIds) {
         return searchResultIds.stream()
                 .map(searchResultRepository::getById)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override

@@ -10,5 +10,5 @@ import lombok.*;
 public class SearchResultUpdateRequest {
     private long resultId;
     private String data;
-    private int category;
+    private int priority;
 }

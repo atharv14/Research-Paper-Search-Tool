@@ -16,6 +16,7 @@ public class CategoryMapper {
                 .categoryId(category.getCategoryId())
                 .label(category.getLabel())
                 .color(category.getColor())
+                .priority(category.getPriority())
                 .build();
     }
 

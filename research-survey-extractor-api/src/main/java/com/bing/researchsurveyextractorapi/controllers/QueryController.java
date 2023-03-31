@@ -39,7 +39,7 @@ public class QueryController {
     }
 
 
-    @PatchMapping("/addResults/{queryId}")
+    @PatchMapping("/results/{queryId}")
     public void patchResults(@PathVariable long queryId, @RequestBody List<SearchResultUpdateRequest> resultUpdateRequests) {
         queryService.patchSearchResults(queryId, resultUpdateRequests);
     }

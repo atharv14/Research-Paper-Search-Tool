@@ -4,6 +4,7 @@ import com.bing.researchsurveyextractorapi.pojo.searchresult.SearchResultRequest
 import lombok.*;
 
 import java.util.Collection;
+import java.util.Map;
 
 @Data
 @Builder
@@ -12,7 +13,6 @@ import java.util.Collection;
 @ToString
 public class QueryRequest {
     private String searchText;
-    private String datasource;
     private long projectId;
-    private Collection<SearchResultRequest> searchResults;
+    private Map<String, Collection<SearchResultRequest>> searchResults;
 }
