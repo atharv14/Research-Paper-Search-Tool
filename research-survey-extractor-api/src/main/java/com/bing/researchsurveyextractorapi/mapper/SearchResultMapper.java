@@ -30,7 +30,7 @@ public class SearchResultMapper {
         return SearchResultDto.builder()
                 .resultId(searchResult.getResultId())
                 .priority(searchResult.getCategory().getPriority())
-                .data(searchResult.getData())
+                .document(searchResult.getDocument())
                 .datasource(searchResult.getDatasource())
                 .build();
     }
@@ -50,7 +50,7 @@ public class SearchResultMapper {
 
     private static SearchResult toSearchResult(SearchResultRequest request, Collection<Category> categories, DatasourceApi datasource) {
         return SearchResult.builder()
-                .data(request.getData())
+                .document(request.getDocument())
                 .datasource(datasource)
                 .category(
                         categories.stream()
