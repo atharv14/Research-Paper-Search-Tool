@@ -11,8 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ScopusSearchService implements SearchService {
@@ -28,8 +27,8 @@ public class ScopusSearchService implements SearchService {
     }
 
     @Override
-    public String getServiceName() {
-        return DatasourceApi.SCOPUS.getName();
+    public DatasourceApi getServiceName() {
+        return DatasourceApi.SCOPUS;
     }
 
     @Override
@@ -52,13 +51,7 @@ public class ScopusSearchService implements SearchService {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String title = "Not Found";
-        String articleDate = "Not Found";
-        String authorName = "Not Found";
-        String affiliationCountry = "Not Found";
-        String publicationName = "Not Found";
-        String issn;
-        String affiliationName = "Not Found";
+        Document.DocumentBuilder documentBuilder = Document.builder();
 
         try{
             JsonNode rootNode = objectMapper.readTree(jsonResponse);
@@ -67,49 +60,64 @@ public class ScopusSearchService implements SearchService {
 
             for(JsonNode entry : entries){
                 //Title
-                if (entry.get("dc:title").asText() != null){
-                    title = entry.get("dc:title").asText();
-                }
+                JsonNode titleNode = entry.get("dc:title");
+                if (titleNode != null)
+                    documentBuilder.title(titleNode.asText());
 
                 //Article Date
-                if (entry.get("prism:coverDate").asText() != null){
-                    articleDate = entry.get("prism:coverDate").asText();
+                JsonNode articleDateNode = entry.get("prism:coverDate");
+                if (articleDateNode != null){
+                    documentBuilder.articleDate(articleDateNode.asText());
                 }
 
                 //authorName
-                if (entry.get("dc:creator").asText() != null){
-                    authorName = entry.get("dc:creator").asText();
+                JsonNode authorNameNode = entry.get("dc:creator");
+                if (authorNameNode != null){
+                    List<String> authorNames = Collections.singletonList(authorNameNode.asText());
+                    documentBuilder.authorNames(authorNames);
                 }
 
                 //affiliationCountry
                 JsonNode affiliationNode = entry.path("affiliation");
-                for(JsonNode country : affiliationNode){
-                    if (country.path("affiliation-country").asText() != null){
-                        affiliationCountry = country.path("affiliation-country").asText();
+                if (affiliationNode.isArray()) {
+                    Set<String> affiliationCountries = new HashSet<>();
+                    for (JsonNode affiliation : affiliationNode) {
+                        JsonNode countryNode = affiliation.path("affiliation-country");
+                        if (countryNode != null && !countryNode.asText().isEmpty()) {
+                            affiliationCountries.add(countryNode.asText());
+                        }
                     }
+                    documentBuilder.affiliationCountry(affiliationCountries);
                 }
 
                 //publicationName
-                if (entry.get("prism:publicationName").asText() != null){
-                    publicationName = entry.get("prism:publicationName").asText();
+                JsonNode pubNameNode = entry.get("prism:publicationName");
+                if (pubNameNode != null){
+                    documentBuilder.publicationName(pubNameNode.asText());
                 }
 
                 //issn
-                if (entry.get("prism:eIssn").asText() != null){
-                    issn = entry.get("prism:eIssn").asText();
-                }else {
-                    issn = "Not Found";
+                String prismeIssn = "prism:eIssn";
+                String prismIssn = "prism:issn";
+                if (entry.has(prismeIssn) && entry.get(prismeIssn).isTextual()){
+                    documentBuilder.issn(entry.get(prismeIssn).asText());
+                } else if (entry.has(prismIssn) && entry.get(prismIssn).isTextual()) {
+                    documentBuilder.issn(entry.get(prismIssn).asText());
                 }
 
                 //affiliationName
-                for(JsonNode name : affiliationNode){
-                    if (name.path("affilname").asText() != null){
-                        affiliationName = name.path("affilname").asText();
+                if (affiliationNode.isArray()) {
+                    Set<String> affiliationNames = new HashSet<>();
+                    for (JsonNode affiliation : affiliationNode) {
+                        JsonNode affNameNode = affiliation.path("affilname");
+                        if (affNameNode != null && !affNameNode.asText().isEmpty()) {
+                            affiliationNames.add(affNameNode.asText());
+                        }
                     }
+                    documentBuilder.affiliationNames(new ArrayList<>(affiliationNames));
                 }
 
-                Document document = new Document(title, articleDate, authorName, affiliationCountry, publicationName, issn, affiliationName);
-                documents.add(document);
+                documents.add(documentBuilder.build());
             }
 
         }catch (Exception e) {
@@ -118,3 +126,4 @@ public class ScopusSearchService implements SearchService {
         return documents;
     }
 }
+// TODO: 3/31/23 Implement the url attribute

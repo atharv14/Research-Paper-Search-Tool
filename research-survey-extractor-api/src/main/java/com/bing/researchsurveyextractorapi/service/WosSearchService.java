@@ -17,13 +17,11 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class WosSearchService implements SearchService {
-
-    private static final Logger LOGGER = Logger.getLogger(
-            Thread.currentThread().getStackTrace()[0].getClassName() );
 
     @Value("${api.wos.key}")
     private String xApiKey;
@@ -46,8 +44,8 @@ public class WosSearchService implements SearchService {
     }
 
     @Override
-    public String getServiceName() {
-        return DatasourceApi.WOS.getName();
+    public DatasourceApi getServiceName() {
+        return DatasourceApi.WOS;
     }
 
     @Override
@@ -82,58 +80,57 @@ public class WosSearchService implements SearchService {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String title = "Not Found";
-        String articleDate;
-        String authorName;
-        String affiliationCountry = "Not Found";
-        String publicationName = "Not Found";
-        String issn = "Not Found";
-        String affiliationName = "Not Found";
+        Document.DocumentBuilder documentBuilder = Document.builder();
 
         try {
             JsonNode root = objectMapper.readTree(response);
             JsonNode dataNode = root.path("Data");
             for (JsonNode documentNode : dataNode) {
                 //Title
-                if (documentNode.get("Title").get("Title").get(0) != null){
-                    LOGGER.info("Logging an title message");
-                    LOGGER.info(title);
-                    title = documentNode.get("Title").get("Title").get(0).asText();
-                    LOGGER.info(title);
+                JsonNode titleNode = documentNode.get("Title").get("Title").get(0);
+                if (titleNode != null){
+                    documentBuilder.title(titleNode.asText());
                 }
                 //Article Date
-                JsonNode sourceNode = documentNode.get("Source");
-                if (sourceNode != null){
-                    if (sourceNode.get("Published.BiblioDate") != null && sourceNode.get("Published.BiblioYear") != null) {
-                        articleDate = sourceNode.get("Published.BiblioDate").get(0).asText() + "," +
-                                sourceNode.get("Published.BiblioYear").get(0).asText();
-                    } else {
-                        articleDate = "Not Found";
-                    }
-                } else {
-                    articleDate = "Not Found";
+                JsonNode sourceNode = documentNode.path("Source");
+                JsonNode dateNode = sourceNode.path("Published.BiblioDate").get(0);
+                JsonNode yearNode = sourceNode.path("Published.BiblioYear").get(0);
+                if (dateNode != null && yearNode != null) {
+                    String date = String.join(",", dateNode.asText(), yearNode.asText());
+                    documentBuilder.articleDate(date);
+                } else if (dateNode == null) {
+                    documentBuilder.articleDate(yearNode.asText());
                 }
                 //Author Name
-                if (documentNode.get("Author").get("Authors").get(0) != null){
-                    authorName = documentNode.get("Author").get("Authors").get(0).asText();
-                }else {
-                    authorName = "Not Found";
+                JsonNode authorNameNode = documentNode.path("Author").path("Authors");
+                if (authorNameNode != null && authorNameNode.isArray()){
+                    List<String> authorNames = StreamSupport.stream(authorNameNode.spliterator(), false)
+                            .map(JsonNode::asText)
+                            .collect(Collectors.toList());
+                    documentBuilder.authorNames(authorNames);
                 }
                 //Affiliation Country
                 // Unable to retrieve it from the JSON response
+
                 //Publication Name
-                if (documentNode.get("Source").get("SourceTitle").get(0) != null){
-                    publicationName = documentNode.get("Source").get("SourceTitle").get(0).asText();
+                JsonNode publicationNameNode = documentNode.get("Source").get("SourceTitle").get(0);
+                if (publicationNameNode != null){
+                    documentBuilder.publicationName(publicationNameNode.asText());
                 }
-                //ISSN
-                if (documentNode.path("Other").path("Identifier.Eissn").get(0) != null){
-                    issn = documentNode.path("Other").path("Identifier.Eissn").get(0).asText();
+                //Issn
+                JsonNode otherNode = documentNode.path("Other");
+                String identifierEissn = "Identifier.Eissn";
+                String identifierIssn = "Identifier.Issn";
+                if (otherNode.has(identifierEissn)){
+                    documentBuilder.issn(otherNode.get(identifierEissn).get(0).asText());
+                } else if (otherNode.has(identifierIssn)) {
+                    documentBuilder.issn(otherNode.get(identifierIssn).get(0).asText());
                 }
                 //Affiliation Name
                 // Unable to retrieve it from the JSON response
 
-                Document document = new Document(title, articleDate, authorName, affiliationCountry, publicationName, issn, affiliationName);
-                documents.add(document);
+                documents.add(documentBuilder.build());
+
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -141,3 +138,4 @@ public class WosSearchService implements SearchService {
         return documents;
     }
 }
+// TODO: 3/31/23 implement url and implement article date and year

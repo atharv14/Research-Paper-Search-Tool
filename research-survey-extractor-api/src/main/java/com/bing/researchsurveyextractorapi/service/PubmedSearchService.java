@@ -44,8 +44,8 @@ public class PubmedSearchService implements SearchService{
     }
 
     @Override
-    public String getServiceName() {
-        return DatasourceApi.PUBMED.getName();
+    public DatasourceApi getServiceName() {
+        return DatasourceApi.PUBMED;
     }
 
     @Override
@@ -94,13 +94,7 @@ public class PubmedSearchService implements SearchService{
         String fetchResponse = restTemplate.getForObject(fetchUrl, String.class);
         ObjectMapper objectMapper1 = new ObjectMapper();
 
-        String title;
-        String articleDate;
-        String authorName;
-        String affiliationCountry = "Not Found";
-        String publicationName;
-        String issn;
-        String affiliationName = "Not Found";
+        Document.DocumentBuilder documentBuilder = Document.builder();
 
         List<Document> documents = new ArrayList<>();
 
@@ -109,53 +103,58 @@ public class PubmedSearchService implements SearchService{
             JsonNode rootNode = objectMapper1.readTree(fetchResponse);
             JsonNode resultNode = rootNode.path("result");
 
-            for (int i=0; i<ids.size(); i++) {
-                String id = ids.get(i);
+            for (String id : ids) {
                 JsonNode idNode = resultNode.get(id);
                 //Title
-                if (idNode.get("title").asText() != null){
-                    title = idNode.get("title").asText();
-                } else {
-                    title = "Not Found";
+                JsonNode titleNode = idNode.get("title");
+                if (titleNode != null) {
+                    documentBuilder.title(titleNode.asText());
                 }
                 //Article Date
-                if (idNode.get("epubdate").asText() != null){
-                    articleDate = idNode.get("epubdate").asText();
-                } else {
-                    articleDate = "Not Found";
+                JsonNode articleDateNode = idNode.get("epubdate");
+                JsonNode pubdateNode = idNode.get("pubdate");
+                if (articleDateNode != null && !articleDateNode.isEmpty()) {
+                    documentBuilder.articleDate(articleDateNode.asText());
+                } else if (pubdateNode != null) {
+                    documentBuilder.articleDate(pubdateNode.asText());
                 }
                 //Authors
-                authorName = idNode.get("authors").asText();
-                for (JsonNode authors : idNode.get("authors")){
-                    authorName += authors.path("name").asText() + " | ";
+                JsonNode authorsNode = idNode.path("authors");
+                if (authorsNode.isArray()) {
+                    List<String> authorNames = new ArrayList<>();
+                    for (JsonNode authorNode : authorsNode) {
+                        JsonNode nameNode = authorNode.path("name");
+                        if (nameNode != null) {
+                            String authorName = nameNode.asText();
+                            authorNames.add(authorName);
+                        }
+                    }
+                    documentBuilder.authorNames(authorNames);
                 }
+
                 //Affiliation Country
                 //Unavailable in api response
+
                 //Publication Name
-                if (idNode.get("sorttitle").asText() != null){
-                    publicationName = idNode.get("sorttitle").asText();
-                } else {
-                    publicationName = "Not Found";
+                JsonNode publicationNameNode = idNode.get("sorttitle");
+                if (publicationNameNode != null) {
+                    documentBuilder.publicationName(publicationNameNode.asText());
                 }
                 //ISSN
-                if (idNode.get("issn").asText() != null){
-                    issn = idNode.get("issn").asText();
-                } else {
-                    issn = "Not Found";
+                JsonNode issnNode = idNode.get("issn");
+                if (issnNode != null) {
+                    documentBuilder.issn(issnNode.asText());
                 }
                 //Affiliation Name
                 //Unavailable in api response
 
-                Document document = new Document(title, articleDate, authorName, affiliationCountry, publicationName, issn, affiliationName);
-                documents.add(document);
+                documents.add(documentBuilder.build());
 
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
-
         return documents;
-
     }
-
 }
+// TODO: 3/31/23 Implement the url attribute
