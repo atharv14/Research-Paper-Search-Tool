@@ -1,6 +1,10 @@
 @import "bootstrap/dist/css/bootstrap.css";
 @import "react-querybuilder/dist/query-builder.css";
 
+.cp {
+    cursor: pointer;
+}
+
 .App {
     min-height: 100vh;
 }
@@ -61,4 +65,8 @@
 .form-select {
     display: inline-block;
     width: 80%;
+}
+
+.modal-90w {
+    width: 90%;
 }

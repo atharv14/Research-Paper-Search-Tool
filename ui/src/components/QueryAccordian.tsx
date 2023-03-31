@@ -1,114 +1,108 @@
+import { useEffect, useState } from "react";
+import { Accordion, Button, Container } from "react-bootstrap";
 import {
-    Accordion,
-    Button,
-    ButtonGroup,
-    Col,
-    Container,
-    Form,
-    Row,
-    Table,
-} from "react-bootstrap";
-import { queryType } from "../api/types";
-import QueryInput from "./QueryBuilder";
+    datasourceType,
+    querySetType,
+    queryType,
+    resultType,
+} from "../api/types";
+import QueryBuilderModal from "./QueryBuilderModal";
+import QueryTab from "./QueryTab";
+import { v4 as uuidv4 } from "uuid";
+import { getQuery } from "../api/query";
 
 type QueryAccordianProps = {
-    isLoading: boolean;
-    queries: Array<queryType> | [];
-    removeQuery: (qId: number) => void;
-    searchQuery: (qId: number) => void;
+    searchQuery: (qId: string) => void;
 };
 
-const QueryAccordian = ({
-    isLoading,
-    queries,
-    removeQuery,
-    searchQuery,
-}: QueryAccordianProps) => {
+const QueryAccordian = () => {
+    const [showQueryBuilderModal, setShowQueryBuilderModal] = useState(false);
+    const [currentQid, setCurrentQId] = useState(""); // remember query id for which query text is being generated in modal
+    const [queries, setQueries] = useState<querySetType>({});
+
+    useEffect(() => {
+        const data = getQuery();
+        setQueries(data);
+    }, []);
+
+    const buildQuery = (qId: string) => {
+        setCurrentQId(qId);
+        setShowQueryBuilderModal(true);
+    };
+    const removeSource = (qId: string, source: string) => {
+        let updatedQueries = { ...queries };
+        console.log(updatedQueries);
+        delete updatedQueries[qId]["results"][source];
+        setQueries(updatedQueries);
+    };
+    const removeQuery = (qId: string) => {
+        let updatedQueries = { ...queries };
+        delete updatedQueries[qId];
+        setQueries(updatedQueries);
+    };
+
+    const addQuery = () => {
+        const newId: string = uuidv4();
+        const newQuery: queryType = {
+            name: "new query",
+            text: "",
+            results: {},
+        };
+        setQueries({ ...queries, [newId]: newQuery });
+    };
+
+    const setCurrentQuery = (qS: string) => {
+        setQueries({
+            ...queries,
+            [currentQid]: {
+                ...queries[currentQid],
+                text: qS,
+            },
+        });
+        setShowQueryBuilderModal(false);
+    };
+
+    const addResultToSource = (
+        qId: string,
+        source: datasourceType,
+        results: resultType[]
+    ) => {
+        let updatedQueries = { ...queries };
+        if (
+            updatedQueries[qId].results[source] &&
+            updatedQueries[qId].results[source].length !== 0
+        )
+            return; // avoid overwrite of results
+        updatedQueries[qId].results[source] = results;
+        setQueries(updatedQueries);
+    };
+
     return (
-        <Container className="query-builder p-0">
-            <Accordion defaultActiveKey="0" alwaysOpen>
-                {queries
-                    ?.map((query, i) => (
-                        <Accordion.Item eventKey={i.toString()} key={i}>
-                            <Accordion.Header>{query.name}</Accordion.Header>
-                            <Accordion.Body>
-                                <Row>
-                                    <Col md="10">
-                                        <QueryInput qId={query.id} />
-                                    </Col>
-                                    <Col md="2">
-                                        <Form.Select
-                                            id={"source_" + query.id.toString()}
-                                            defaultValue="ieee"
-                                        >
-                                            <option value="ieee">IEEE</option>
-                                            <option value="wos">
-                                                Web Of Science
-                                            </option>
-                                            <option value="pubmed">
-                                                Pubmed
-                                            </option>
-                                        </Form.Select>
-                                        {!isLoading ? (
-                                            <ButtonGroup className="mb-2 mt-4">
-                                                <Button
-                                                    variant="success"
-                                                    onClick={() =>
-                                                        searchQuery(query.id)
-                                                    }
-                                                >
-                                                    FETCH
-                                                </Button>
-                                                <Button
-                                                    variant="danger"
-                                                    onClick={() =>
-                                                        removeQuery(query.id)
-                                                    }
-                                                >
-                                                    DELETE
-                                                </Button>
-                                            </ButtonGroup>
-                                        ) : (
-                                            <span>Fetching....</span>
-                                        )}
-                                    </Col>
-                                </Row>
-                                <Table striped>
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Title</th>
-                                            <th>Article Date</th>
-                                            <th>ISSN</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {query.results.map(
-                                            (
-                                                {
-                                                    id,
-                                                    title,
-                                                    articleDate,
-                                                    issn,
-                                                },
-                                                i
-                                            ) => (
-                                                <tr key={i}>
-                                                    <td>{i + 1}</td>
-                                                    <td>{title}</td>
-                                                    <td>{articleDate}</td>
-                                                    <td>{issn}</td>
-                                                </tr>
-                                            )
-                                        )}
-                                    </tbody>
-                                </Table>
-                            </Accordion.Body>
-                        </Accordion.Item>
-                    ))
-                    .reverse()}
-            </Accordion>
-        </Container>
+        <>
+            <Button onClick={addQuery}>Add Query</Button>
+            <Container className="query-builder p-0">
+                <Accordion defaultActiveKey="0" alwaysOpen>
+                    {Object.entries(queries)
+                        .map(([qId, query]) => (
+                            <QueryTab
+                                key={qId}
+                                qId={qId}
+                                query={query}
+                                buildQuery={buildQuery}
+                                removeQuery={removeQuery}
+                                removeSource={removeSource}
+                                addResultToSource={addResultToSource}
+                            />
+                        ))
+                        .reverse()}
+                </Accordion>
+                <QueryBuilderModal
+                    show={showQueryBuilderModal}
+                    saveQuery={setCurrentQuery}
+                    handleClose={() => setShowQueryBuilderModal(false)}
+                />
+            </Container>
+        </>
     );
 };
 

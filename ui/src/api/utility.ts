@@ -1,5 +1,8 @@
+import { datasourceType, uniqueResultType } from "./types";
+
 const getToken = () => {
-    return localStorage.getItem("token") || false;
+    const token = localStorage.getItem("token");
+    return token;
 };
 
 const setToken = (token: string) => {
@@ -14,4 +17,38 @@ const isUserLoggedIn = () => {
     return getToken();
 };
 
-export { getToken, setToken, isUserLoggedIn, unsetToken };
+const getConfig = () => {
+    const token = getToken();
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+};
+
+const processQueryText = (q: string) => {
+    return q.replaceAll("keyword = ", "");
+};
+
+const filterResultsByTitle = (arr: uniqueResultType[]) => {
+    let f: string[] = [];
+    return arr.filter((n) => {
+        return f.indexOf(n.title) == -1 && f.push(n.title);
+    });
+};
+
+type returnDatasource = () => datasourceType[];
+const getDataSources: returnDatasource = () => {
+    return ["ieee", "wos", "pubmed"];
+};
+
+export {
+    getToken,
+    setToken,
+    isUserLoggedIn,
+    unsetToken,
+    getConfig,
+    getDataSources,
+    processQueryText,
+    filterResultsByTitle,
+};
