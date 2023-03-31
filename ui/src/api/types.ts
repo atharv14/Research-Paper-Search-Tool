@@ -39,3 +39,7 @@ export type resultType = {
     publicationName: string;
     title: string;
 };
+
+export type uniqueResultType = resultType & {
+    source: string;
+};

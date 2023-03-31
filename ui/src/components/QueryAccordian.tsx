@@ -52,7 +52,6 @@ const QueryAccordian = () => {
     };
 
     const setCurrentQuery = (qS: string) => {
-        // TODO: update queries variable instead of below manipulation
         setQueries({
             ...queries,
             [currentQid]: {

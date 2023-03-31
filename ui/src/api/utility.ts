@@ -1,4 +1,4 @@
-import { datasourceType } from "./types";
+import { datasourceType, uniqueResultType } from "./types";
 
 const getToken = () => {
     const token = localStorage.getItem("token");
@@ -30,6 +30,13 @@ const processQueryText = (q: string) => {
     return q.replaceAll("keyword = ", "");
 };
 
+const filterResultsByTitle = (arr: uniqueResultType[]) => {
+    let f: string[] = [];
+    return arr.filter((n) => {
+        return f.indexOf(n.title) == -1 && f.push(n.title);
+    });
+};
+
 type returnDatasource = () => datasourceType[];
 const getDataSources: returnDatasource = () => {
     return ["ieee", "wos", "pubmed"];
@@ -43,4 +50,5 @@ export {
     getConfig,
     getDataSources,
     processQueryText,
+    filterResultsByTitle,
 };
