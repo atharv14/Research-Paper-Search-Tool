@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Accordion,
     Button,
@@ -9,9 +9,11 @@ import {
     Form,
     InputGroup,
     Row,
+    Spinner,
 } from "react-bootstrap";
 import { FiTrash } from "react-icons/fi";
-import { datasourceType, queryType } from "../api/types";
+import { search } from "../api/search";
+import { datasourceType, queryType, resultType } from "../api/types";
 import { getDataSources } from "../api/utility";
 import QuerySourceFetcher from "./QuerySourceFetcher";
 
@@ -21,7 +23,11 @@ interface QueryTabProps {
     buildQuery: (qId: string) => void;
     removeQuery: (qId: string) => void;
     removeSource: (qId: string, datasource: string) => void;
-    addSourceInResult: (qId: string, source: datasourceType) => void;
+    addResultToSource: (
+        qId: string,
+        source: datasourceType,
+        result: resultType[]
+    ) => void;
 }
 
 const QueryTab = ({
@@ -30,10 +36,22 @@ const QueryTab = ({
     buildQuery,
     removeQuery,
     removeSource,
-    addSourceInResult,
+    addResultToSource,
 }: QueryTabProps) => {
     const datasources = getDataSources();
-    const handleQueryTextChange = () => {};
+    const [isLoading, setIsLoading] = useState(false);
+    const fetchResults = (datasource: datasourceType) => {
+        setIsLoading(true);
+        search({ datasource, queryText: query.text })
+            .then((data) => {
+                addResultToSource(qId, datasource, data);
+            })
+            .catch((e) => {
+                alert("Something went wrong");
+                console.log(e);
+            })
+            .finally(() => setIsLoading(false));
+    };
     return (
         <Accordion.Item eventKey={qId}>
             <Accordion.Header>{query.name}</Accordion.Header>
@@ -45,7 +63,6 @@ const QueryTab = ({
                                 placeholder="Write your query..."
                                 disabled
                                 value={query.text}
-                                onChange={handleQueryTextChange}
                             />
                             <Button
                                 variant="secondary"
@@ -71,12 +88,18 @@ const QueryTab = ({
                     {Object.entries(query.results).map(([source, res]) => (
                         <QuerySourceFetcher
                             key={source}
-                            datasource={source}
+                            datasource={source as datasourceType}
                             res={res}
                             qId={qId}
                             removeSource={removeSource}
+                            fetchResults={fetchResults}
                         />
                     ))}
+                </Row>
+                <Row className="justify-content-center">
+                    {isLoading && (
+                        <Spinner animation="border" variant="success" />
+                    )}
                 </Row>
                 <Row className="justify-content-between mt-2">
                     <Col sm="3">
@@ -85,7 +108,11 @@ const QueryTab = ({
                             variant="secondary"
                             title="Add Datasource"
                             onSelect={(val) =>
-                                addSourceInResult(qId, val as datasourceType)
+                                addResultToSource(
+                                    qId,
+                                    val as datasourceType,
+                                    []
+                                )
                             }
                         >
                             {datasources.map((source) => (

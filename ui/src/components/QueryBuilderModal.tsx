@@ -14,7 +14,7 @@ const initialQuery: RuleGroupType = {
     rules: [],
 };
 
-interface queryInputProps {
+interface queryBuilderModalProps {
     show: boolean;
     handleClose: () => void;
     saveQuery: (qS: string) => void;
@@ -24,7 +24,7 @@ const QueryBuilderModal = ({
     show,
     handleClose,
     saveQuery,
-}: queryInputProps) => {
+}: queryBuilderModalProps) => {
     const [query, setQuery] = useState(initialQuery);
     const [queryString, setQueryString] = useState("");
     const onSaveClose = () => {
@@ -40,12 +40,7 @@ const QueryBuilderModal = ({
     };
 
     return (
-        <Modal
-            show={show}
-            onShow={() => setQuery(initialQuery)}
-            onHide={handleClose}
-            size="xl"
-        >
+        <Modal show={show} onHide={handleClose} size="xl">
             <Modal.Header closeButton>
                 <Modal.Title id="example-custom-modal-styling-title">
                     Build Your Query

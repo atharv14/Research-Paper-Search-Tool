@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Row, Button } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { FiSettings } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
 import { getProject } from "../api/project";
-// import { search } from "../api/search";
-import { projectType, querySetType, queryType } from "../api/types";
+import { projectType } from "../api/types";
 import QueryAccordian from "../components/QueryAccordian";
 import ResultSetAccordian from "../components/ResultAccordian";
 
@@ -17,31 +16,6 @@ const Project = () => {
         const projectData = getProject(id);
         setProject(projectData);
     }, []);
-
-    const searchQuery = (qId: string) => {
-        // const datasource = (
-        //     document.getElementById("source_" + id) as HTMLInputElement
-        // )?.value;
-        // const queryText = (
-        //     document.getElementById("query_" + id) as HTMLInputElement
-        // )?.innerText.slice(1, -1); // removing outermost brackets
-        // search({ datasource, queryText })
-        //     .then((data) => {
-        //         let updatedQueries = [...queries];
-        //         updatedQueries.forEach((q, i) => {
-        //             if (q.id == id)
-        //                 updatedQueries[i] = {
-        //                     ...updatedQueries[i],
-        //                     results: data,
-        //                 };
-        //         });
-        //         setQueries(updatedQueries);
-        //     })
-        //     .catch((e) => {
-        //         alert("Something went wrong");
-        //         console.log(e);
-        //     });
-    };
 
     return (
         <Container className="project-page">

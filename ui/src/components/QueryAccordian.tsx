@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Accordion, Button, Container } from "react-bootstrap";
-import { datasourceType, querySetType, queryType } from "../api/types";
+import {
+    datasourceType,
+    querySetType,
+    queryType,
+    resultType,
+} from "../api/types";
 import QueryBuilderModal from "./QueryBuilderModal";
 import QueryTab from "./QueryTab";
 import { v4 as uuidv4 } from "uuid";
@@ -58,11 +63,18 @@ const QueryAccordian = () => {
         setShowQueryBuilderModal(false);
     };
 
-    const addSourceInResult = (qId: string, source: datasourceType) => {
+    const addResultToSource = (
+        qId: string,
+        source: datasourceType,
+        results: resultType[]
+    ) => {
         let updatedQueries = { ...queries };
-        if (!updatedQueries[qId].results[source])
-            // add source as key to results of that query
-            updatedQueries[qId].results[source] = [];
+        if (
+            updatedQueries[qId].results[source] &&
+            updatedQueries[qId].results[source].length !== 0
+        )
+            return; // avoid overwrite of results
+        updatedQueries[qId].results[source] = results;
         setQueries(updatedQueries);
     };
 
@@ -80,7 +92,7 @@ const QueryAccordian = () => {
                                 buildQuery={buildQuery}
                                 removeQuery={removeQuery}
                                 removeSource={removeSource}
-                                addSourceInResult={addSourceInResult}
+                                addResultToSource={addResultToSource}
                             />
                         ))
                         .reverse()}

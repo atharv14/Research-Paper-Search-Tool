@@ -31,9 +31,11 @@ export type queryType = {
 };
 
 export type resultType = {
-    id: number;
-    title: string;
-    // link: string;
+    affiliationCountry: string;
+    affiliationName: string;
     articleDate: string;
+    authorName: string;
     issn: string;
+    publicationName: string;
+    title: string;
 };
