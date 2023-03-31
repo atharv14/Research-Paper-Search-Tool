@@ -1,5 +1,4 @@
 import { projects } from "./dummyData";
-import { getQueries } from "./query";
 import { projectType } from "./types";
 
 type returnProject = (projectId: number) => projectType | undefined;

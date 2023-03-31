@@ -1,5 +1,10 @@
 import { getProject } from "./project";
+import { querySetType } from "./types";
 
-const getQueries = (projectIds: number[]) => {};
+type returnQuery = () => querySetType;
 
-export { getQueries };
+const getQuery: returnQuery = () => {
+    return {};
+};
+
+export { getQuery };

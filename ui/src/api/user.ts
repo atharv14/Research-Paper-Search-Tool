@@ -2,13 +2,7 @@ import { userData } from "./dummyData";
 import { userType } from "./types";
 import axios from "axios";
 import { API_URI } from "./constants";
-import { getToken, setToken } from "./utility";
-
-const config = {
-    headers: {
-        Authorization: `Bearer ${getToken()}`,
-    },
-};
+import { setToken } from "./utility";
 
 type returnUser = () => userType;
 const getUser: returnUser = () => {

@@ -15,15 +15,13 @@ const projects: projectType[] = [
         name: "Project1",
         owner: "john_Doe",
         collections: [1],
-        queries: [
-            {
-                id: 1,
+        queries: {
+            "1": {
                 name: "Query1",
                 text: "",
-                source: "ieee",
-                results: [],
+                results: {},
             },
-        ],
+        },
         desc: "this is project 1 description",
     },
 ];

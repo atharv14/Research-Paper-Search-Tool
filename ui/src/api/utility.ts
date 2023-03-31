@@ -1,3 +1,5 @@
+import { datasourceType } from "./types";
+
 const getToken = () => {
     const token = localStorage.getItem("token");
     return token;
@@ -24,4 +26,21 @@ const getConfig = () => {
     };
 };
 
-export { getToken, setToken, isUserLoggedIn, unsetToken, getConfig };
+const processQueryText = (q: string) => {
+    return q.replaceAll("keyword = ", "");
+};
+
+type returnDatasource = () => datasourceType[];
+const getDataSources: returnDatasource = () => {
+    return ["ieee", "wos", "pubmed"];
+};
+
+export {
+    getToken,
+    setToken,
+    isUserLoggedIn,
+    unsetToken,
+    getConfig,
+    getDataSources,
+    processQueryText,
+};

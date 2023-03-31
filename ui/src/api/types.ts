@@ -3,8 +3,12 @@ export type projectType = {
     name: string;
     owner: string;
     collections: number[];
-    queries: queryType[];
+    queries: querySetType;
     desc: string;
+};
+
+export type querySetType = {
+    [qId: string]: queryType;
 };
 
 export type userType = {
@@ -16,12 +20,14 @@ export type userType = {
     bio: string;
 };
 
+export type datasourceType = "ieee" | "wos" | "pubmed";
+
+export type resultCollectionType = { [source: string]: resultType[] };
+
 export type queryType = {
-    id: number;
     name: string;
     text: string;
-    source: "ieee" | "wos" | "pubmed";
-    results: resultType[];
+    results: resultCollectionType;
 };
 
 export type resultType = {

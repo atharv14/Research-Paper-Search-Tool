@@ -1,4 +1,4 @@
-import { Container, Tabs } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import AuthTabs from "../components/AuthTabs";
 
 const Auth = () => {
