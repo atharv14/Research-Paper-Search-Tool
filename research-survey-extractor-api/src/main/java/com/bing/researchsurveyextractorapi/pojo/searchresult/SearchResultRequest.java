@@ -1,5 +1,6 @@
 package com.bing.researchsurveyextractorapi.pojo.searchresult;
 
+import com.bing.researchsurveyextractorapi.models.Document;
 import lombok.*;
 
 @Data
@@ -8,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class SearchResultRequest {
-    private String data;
-    private int category;
+    private Document document;
+    private int priority;
 }

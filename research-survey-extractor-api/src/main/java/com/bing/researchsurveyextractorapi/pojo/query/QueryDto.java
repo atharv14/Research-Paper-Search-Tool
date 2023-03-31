@@ -4,7 +4,8 @@ import com.bing.researchsurveyextractorapi.models.DatasourceApi;
 import com.bing.researchsurveyextractorapi.pojo.searchresult.SearchResultDto;
 import lombok.*;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -14,6 +15,5 @@ import java.util.Collection;
 public class QueryDto {
     private long queryId;
     private String searchText;
-    private DatasourceApi datasource;
-    private Collection<SearchResultDto> searchResults;
+    private Map<DatasourceApi, List<SearchResultDto>> searchResults;
 }
