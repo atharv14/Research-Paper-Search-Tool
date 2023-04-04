@@ -1,10 +1,9 @@
 export type projectType = {
-    id: number;
-    name: string;
+    projectId: number;
+    projectName: string;
+    description: string;
     owner: string;
     collections: number[];
-    queries: querySetType;
-    desc: string;
 };
 
 export type querySetType = {

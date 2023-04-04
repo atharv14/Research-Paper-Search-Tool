@@ -1,4 +1,3 @@
-import { getProject } from "./project";
 import { querySetType } from "./types";
 
 type returnQuery = () => querySetType;

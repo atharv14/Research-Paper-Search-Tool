@@ -11,18 +11,11 @@ const userData = {
 
 const projects: projectType[] = [
     {
-        id: 1,
-        name: "Project1",
+        projectId: 1,
+        projectName: "Project1",
         owner: "john_Doe",
         collections: [1],
-        queries: {
-            "1": {
-                name: "Query1",
-                text: "",
-                results: {},
-            },
-        },
-        desc: "this is project 1 description",
+        description: "this is project 1 description",
     },
 ];
 

@@ -13,11 +13,11 @@ const MyNavbar = ({ isLoggedIn, handleLogout }: navbarPropsType) => {
                 <Navbar.Brand href="/">Title</Navbar.Brand>
                 <Navbar.Collapse className="justify-content-end">
                     <Nav>
-                        <Nav.Link as={Link} to="/">
-                            Dashboard
-                        </Nav.Link>
                         {isLoggedIn && (
                             <>
+                                <Nav.Link as={Link} to="/">
+                                    Dashboard
+                                </Nav.Link>
                                 <Nav.Link as={Link} to="/profile">
                                     Profile
                                 </Nav.Link>
