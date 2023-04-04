@@ -1,7 +1,7 @@
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import ProjectCard from "../components/ProjectCard";
-import { getProjects } from "../api/project";
+import { getProjects, postProject } from "../api/project";
 import { useEffect, useState } from "react";
 import { projectType } from "../api/types";
 import { isUserLoggedIn } from "../api/utility";
@@ -13,7 +13,12 @@ const Dashbaord = () => {
     const navigate = useNavigate();
 
     const saveProject = (name: string, description: string) => {
-        console.log(name, description);
+        postProject({ name, description })
+            .then((data) => setProjects([...projects, data]))
+            .catch((e) => {
+                alert("Something went wrong!");
+                console.log(e);
+            });
     };
 
     const fetchProjects = () => {

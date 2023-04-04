@@ -14,6 +14,7 @@ const getProject: returnProject = async (id) => {
     console.log(resp.data);
     return resp.data;
 };
+
 type returnProjects = () => Promise<projectType[]>;
 const getProjects: returnProjects = async () => {
     const config = getConfig();
@@ -25,5 +26,21 @@ const getProjects: returnProjects = async () => {
     console.log(resp.data);
     return resp.data;
 };
+interface postProjectBody {
+    name: string;
+    description: string;
+}
+type returnSavedProject = (data: postProjectBody) => Promise<projectType>;
+const postProject: returnSavedProject = async (data) => {
+    const config = getConfig();
+    const body = { projectName: data.name, description: data.description };
 
-export { getProjects, getProject };
+    console.log("Saving project", body);
+    const url = API_URI + "/projects";
+
+    const resp = await axios.post(url, body, config);
+    console.log(resp.data);
+    return resp.data;
+};
+
+export { getProjects, getProject, postProject };
