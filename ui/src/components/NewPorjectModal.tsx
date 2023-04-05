@@ -8,7 +8,8 @@ import {
     Modal,
     Row,
 } from "react-bootstrap";
-import { projectType } from "../api/types";
+import { categorySetType, projectType } from "../api/types";
+import CategoryGroup from "./CategoryGroup";
 
 interface newProjectModalProps {
     show: boolean;
@@ -23,6 +24,7 @@ const NewPorjectModal = ({
 }: newProjectModalProps) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+    const [categories, setCategories] = useState<categorySetType>({});
 
     const clearInputs = () => {
         setName("");
@@ -55,18 +57,29 @@ const NewPorjectModal = ({
                             />
                         </Col>
                     </Form.Group>
-                    <FloatingLabel
-                        controlId="floatingTextarea2"
-                        label="Description"
-                    >
-                        <Form.Control
-                            as="textarea"
-                            placeholder="Leave a comment here"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            style={{ height: "100px" }}
-                        />
-                    </FloatingLabel>
+                    <Form.Group className="mb-2">
+                        <FloatingLabel
+                            controlId="floatingTextarea2"
+                            label="Description"
+                        >
+                            <Form.Control
+                                as="textarea"
+                                placeholder="Leave a comment here"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                style={{ height: "100px" }}
+                            />
+                        </FloatingLabel>
+                    </Form.Group>
+
+                    {/* <Form.Label>Categories</Form.Label>
+
+                    <CategoryGroup
+                        categories={categories}
+                        setCategories={(cats: categorySetType) =>
+                            setCategories(cats)
+                        }
+                    /> */}
                 </Form>
             </Modal.Body>
             <Modal.Footer>
