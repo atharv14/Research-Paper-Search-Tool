@@ -42,3 +42,13 @@ export type resultType = {
 export type uniqueResultType = resultType & {
     source: string;
 };
+
+export type categorySetType = {
+    [cId: string]: categoryType;
+};
+
+export type categoryType = {
+    color: string;
+    label: string;
+    priority: number;
+};
