@@ -23,8 +23,8 @@
        for property `spring.datasource.name`
     2. Create a file `secrets.properties` for storing confidential properties like shared secrets/credentials etc.
        within this [directory](src/main/resources)
-    3. Refer this [template](src/main/resources/secrets.properties.template) and configure database login credential and
-       jwt related security configurations within file created from above step
+    3. Refer this [template](src/main/resources/secrets.properties.template) and configure database login credential,
+       jwt related security configurations and API key value within file created from above step
 3. Clone this project
 4. Open a terminal or command prompt and change directory to the `research-survey-extractor-api` directory
 
