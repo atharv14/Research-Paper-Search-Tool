@@ -26,6 +26,7 @@ export type resultCollectionType = { [source: string]: resultType[] };
 export type queryType = {
     name: string;
     text: string;
+    format: string;
     results: resultCollectionType;
 };
 

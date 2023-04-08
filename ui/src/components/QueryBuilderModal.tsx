@@ -1,6 +1,12 @@
 import { QueryBuilderBootstrap } from "@react-querybuilder/bootstrap";
-import { useState } from "react";
-import type { Field, RuleGroupType, Operator } from "react-querybuilder";
+import { useEffect, useState } from "react";
+import {
+    Field,
+    RuleGroupType,
+    Operator,
+    parseSQL,
+    update,
+} from "react-querybuilder";
 import { formatQuery, QueryBuilder } from "react-querybuilder";
 import { Button, Container, Modal } from "react-bootstrap";
 import { processQueryText } from "../api/utility";
@@ -16,32 +22,40 @@ const initialQuery: RuleGroupType = {
 
 interface queryBuilderModalProps {
     show: boolean;
+    incomingQuery: string;
     handleClose: () => void;
-    saveQuery: (qS: string) => void;
+    saveQuery: (qS: string, qF: string) => void;
 }
 
 const QueryBuilderModal = ({
     show,
+    incomingQuery,
     handleClose,
     saveQuery,
 }: queryBuilderModalProps) => {
-    const [query, setQuery] = useState(initialQuery);
-    const [queryString, setQueryString] = useState("");
+    const [query, setQuery] = useState(initialQuery); // query built by builder lib
+    const [queryFormat, setQueryFormat] = useState(incomingQuery); // maintaining format to revert from string to builder
+    const [queryString, setQueryString] = useState(""); // plain string for us to show
     const onSaveClose = () => {
-        // reset the builder once use query click
-        setQuery(initialQuery);
-        saveQuery(queryString);
+        saveQuery(queryString, queryFormat);
     };
     const handleQueryChange = (q: RuleGroupType) => {
         setQuery(q);
-        // console.log(q);
-        const qString = formatQuery(q, "sql").replaceAll("keyword = ", "");
-        setQueryString(processQueryText(qString));
     };
+    useEffect(() => {
+        const qFormat = formatQuery(query, "sql");
+        setQueryFormat(qFormat);
+        setQueryString(processQueryText(qFormat));
+    }, [query]);
 
     return (
-        <Modal show={show} onHide={handleClose} size="xl">
-            <Modal.Header closeButton>
+        <Modal
+            show={show}
+            onEntered={() => setQuery(parseSQL(incomingQuery))}
+            onHide={handleClose}
+            size="xl"
+        >
+            <Modal.Header>
                 <Modal.Title id="example-custom-modal-styling-title">
                     Build Your Query
                 </Modal.Title>

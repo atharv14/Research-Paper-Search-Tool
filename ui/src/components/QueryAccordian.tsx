@@ -46,17 +46,19 @@ const QueryAccordian = () => {
         const newQuery: queryType = {
             name: "new query",
             text: "",
+            format: "(1=1)",
             results: {},
         };
         setQueries({ ...queries, [newId]: newQuery });
     };
 
-    const setCurrentQuery = (qS: string) => {
+    const setCurrentQuery = (qS: string, qF: string) => {
         setQueries({
             ...queries,
             [currentQid]: {
                 ...queries[currentQid],
                 text: qS,
+                format: qF,
             },
         });
         setShowQueryBuilderModal(false);
@@ -99,6 +101,9 @@ const QueryAccordian = () => {
                 <QueryBuilderModal
                     show={showQueryBuilderModal}
                     saveQuery={setCurrentQuery}
+                    incomingQuery={
+                        queries[currentQid] ? queries[currentQid]["format"] : ""
+                    }
                     handleClose={() => setShowQueryBuilderModal(false)}
                 />
             </Container>
