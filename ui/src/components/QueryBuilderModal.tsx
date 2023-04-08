@@ -22,7 +22,7 @@ const initialQuery: RuleGroupType = {
 
 interface queryBuilderModalProps {
     show: boolean;
-    incomingQuery: string;
+    incomingQuery: string | undefined;
     handleClose: () => void;
     saveQuery: (qS: string, qF: string) => void;
 }
@@ -34,7 +34,7 @@ const QueryBuilderModal = ({
     saveQuery,
 }: queryBuilderModalProps) => {
     const [query, setQuery] = useState(initialQuery); // query built by builder lib
-    const [queryFormat, setQueryFormat] = useState(incomingQuery); // maintaining format to revert from string to builder
+    const [queryFormat, setQueryFormat] = useState(incomingQuery || ""); // maintaining format to revert from string to builder
     const [queryString, setQueryString] = useState(""); // plain string for us to show
     const onSaveClose = () => {
         saveQuery(queryString, queryFormat);
@@ -51,7 +51,7 @@ const QueryBuilderModal = ({
     return (
         <Modal
             show={show}
-            onEntered={() => setQuery(parseSQL(incomingQuery))}
+            onEntered={() => setQuery(parseSQL(incomingQuery || ""))}
             onHide={handleClose}
             size="xl"
         >

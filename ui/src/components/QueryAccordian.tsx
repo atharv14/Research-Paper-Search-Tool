@@ -44,10 +44,10 @@ const QueryAccordian = () => {
     const addQuery = () => {
         const newId: string = uuidv4();
         const newQuery: queryType = {
-            name: "new query",
-            text: "",
+            queryId: 0,
+            searchText: "",
             format: "(1=1)",
-            results: {},
+            searchResults: {},
         };
         setQueries({ ...queries, [newId]: newQuery });
     };
@@ -57,7 +57,7 @@ const QueryAccordian = () => {
             ...queries,
             [currentQid]: {
                 ...queries[currentQid],
-                text: qS,
+                searchText: qS,
                 format: qF,
             },
         });
@@ -71,11 +71,11 @@ const QueryAccordian = () => {
     ) => {
         let updatedQueries = { ...queries };
         if (
-            updatedQueries[qId].results[source] &&
-            updatedQueries[qId].results[source].length !== 0
+            updatedQueries[qId].searchResults[source] &&
+            updatedQueries[qId].searchResults[source].length !== 0
         )
             return; // avoid overwrite of results
-        updatedQueries[qId].results[source] = results;
+        updatedQueries[qId].searchResults[source] = results;
         setQueries(updatedQueries);
     };
 

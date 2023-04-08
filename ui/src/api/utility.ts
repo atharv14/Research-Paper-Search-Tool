@@ -33,7 +33,7 @@ const processQueryText = (q: string) => {
 const filterResultsByTitle = (arr: uniqueResultType[]) => {
     let f: string[] = [];
     return arr.filter((n) => {
-        return f.indexOf(n.title) == -1 && f.push(n.title);
+        return f.indexOf(n.document.title) == -1 && f.push(n.document.title);
     });
 };
 

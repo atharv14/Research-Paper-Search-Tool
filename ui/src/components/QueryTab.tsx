@@ -51,7 +51,7 @@ const QueryTab = ({
     const [isLoading, setIsLoading] = useState(false);
     const fetchResults = (datasource: datasourceType) => {
         setIsLoading(true);
-        search({ datasource, queryText: query.text })
+        search({ datasource, queryText: query.searchText })
             .then((data) => {
                 addResultToSource(qId, datasource, data);
                 updateAllResults();
@@ -66,7 +66,7 @@ const QueryTab = ({
     // TODO: update on add result and delete result as well
     const updateAllResults = () => {
         let updatedAllResults: uniqueResultType[] = [];
-        Object.entries(query.results).forEach(([source, res]) => {
+        Object.entries(query.searchResults).forEach(([source, res]) => {
             let temp = res.map((row) => {
                 return { ...row, source };
             });
@@ -79,7 +79,7 @@ const QueryTab = ({
     return (
         <>
             <Accordion.Item eventKey={qId}>
-                <Accordion.Header>{query.name}</Accordion.Header>
+                <Accordion.Header>New Query</Accordion.Header>
                 <Accordion.Body>
                     <Row>
                         <Col md="11">
@@ -87,7 +87,7 @@ const QueryTab = ({
                                 <Form.Control
                                     placeholder="Write your query..."
                                     disabled
-                                    value={query.text}
+                                    value={query.searchText}
                                 />
                                 <Button
                                     variant="secondary"
@@ -110,16 +110,18 @@ const QueryTab = ({
                         </Col>
                     </Row>
                     <Row className="justify-content-center">
-                        {Object.entries(query.results).map(([source, res]) => (
-                            <QuerySourceFetcher
-                                key={source}
-                                datasource={source as datasourceType}
-                                res={res}
-                                qId={qId}
-                                removeSource={removeSource}
-                                fetchResults={fetchResults}
-                            />
-                        ))}
+                        {Object.entries(query.searchResults).map(
+                            ([source, res]) => (
+                                <QuerySourceFetcher
+                                    key={source}
+                                    datasource={source as datasourceType}
+                                    res={res}
+                                    qId={qId}
+                                    removeSource={removeSource}
+                                    fetchResults={fetchResults}
+                                />
+                            )
+                        )}
                     </Row>
                     <Row className="justify-content-center">
                         {isLoading && (
@@ -150,7 +152,7 @@ const QueryTab = ({
                                 ))}
                             </DropdownButton>
                         </Col>
-                        {Object.keys(query.results).length ? (
+                        {Object.keys(query.searchResults).length ? (
                             <>
                                 <Col
                                     sm="3"
