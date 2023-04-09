@@ -1,23 +1,29 @@
-import { datasourceType, uniqueResultType } from "./types";
+import {
+    datasourceType,
+    queryType,
+    resultDocumentType,
+    resultType,
+    uniqueResultType,
+} from "./types";
 
-const getToken = () => {
+export const getToken = () => {
     const token = localStorage.getItem("token");
     return token;
 };
 
-const setToken = (token: string) => {
+export const setToken = (token: string) => {
     localStorage.setItem("token", token);
 };
 
-const unsetToken = () => {
+export const unsetToken = () => {
     localStorage.removeItem("token");
 };
 
-const isUserLoggedIn = () => {
+export const isUserLoggedIn = () => {
     return getToken();
 };
 
-const getConfig = () => {
+export const getConfig = () => {
     const token = getToken();
     return {
         headers: {
@@ -26,11 +32,11 @@ const getConfig = () => {
     };
 };
 
-const processQueryText = (q: string) => {
+export const processQueryText = (q: string) => {
     return q.replaceAll("keyword = ", "");
 };
 
-const filterResultsByTitle = (arr: uniqueResultType[]) => {
+export const filterResultsByTitle = (arr: uniqueResultType[]) => {
     let f: string[] = [];
     return arr.filter((n) => {
         return f.indexOf(n.document.title) == -1 && f.push(n.document.title);
@@ -38,17 +44,23 @@ const filterResultsByTitle = (arr: uniqueResultType[]) => {
 };
 
 type returnDatasource = () => datasourceType[];
-const getDataSources: returnDatasource = () => {
-    return ["ieee", "wos", "pubmed"];
+export const getDataSources: returnDatasource = () => {
+    return ["IEEE", "WOS", "PUBMED"];
 };
-
-export {
-    getToken,
-    setToken,
-    isUserLoggedIn,
-    unsetToken,
-    getConfig,
-    getDataSources,
-    processQueryText,
-    filterResultsByTitle,
+type returnProcessedSearchResponse = (
+    data: resultDocumentType[],
+    source: datasourceType
+) => resultType[];
+export const processSearchResponse: returnProcessedSearchResponse = (
+    data,
+    source
+) => {
+    const processedData: resultType[] = data.map((doc) => {
+        return {
+            datasource: source,
+            priority: 0,
+            document: doc,
+        };
+    });
+    return processedData;
 };

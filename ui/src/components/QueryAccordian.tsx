@@ -9,21 +9,17 @@ import {
 import QueryBuilderModal from "./QueryBuilderModal";
 import QueryTab from "./QueryTab";
 import { v4 as uuidv4 } from "uuid";
-import { getQuery } from "../api/query";
+import { saveQueries } from "../api/query";
 
 type QueryAccordianProps = {
-    searchQuery: (qId: string) => void;
+    initialQueries: querySetType;
+    projectId: number;
 };
 
-const QueryAccordian = () => {
+const QueryAccordian = ({ initialQueries, projectId }: QueryAccordianProps) => {
     const [showQueryBuilderModal, setShowQueryBuilderModal] = useState(false);
     const [currentQid, setCurrentQId] = useState(""); // remember query id for which query text is being generated in modal
-    const [queries, setQueries] = useState<querySetType>({});
-
-    useEffect(() => {
-        const data = getQuery();
-        setQueries(data);
-    }, []);
+    const [queries, setQueries] = useState(initialQueries);
 
     const buildQuery = (qId: string) => {
         setCurrentQId(qId);
@@ -79,6 +75,17 @@ const QueryAccordian = () => {
         setQueries(updatedQueries);
     };
 
+    const saveQuery = (qId: string) => {
+        saveQueries(projectId, queries[qId])
+            .then(({ queryId, searchResults, searchText }) => {
+                console.log("Update Query for queryId and results");
+            })
+            .catch((e) => {
+                alert("Something Went wrong");
+                console.log(e);
+            });
+    };
+
     return (
         <>
             <Button onClick={addQuery}>Add Query</Button>
@@ -94,6 +101,7 @@ const QueryAccordian = () => {
                                 removeQuery={removeQuery}
                                 removeSource={removeSource}
                                 addResultToSource={addResultToSource}
+                                saveQueryResults={saveQuery}
                             />
                         ))
                         .reverse()}

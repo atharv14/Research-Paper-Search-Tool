@@ -19,7 +19,7 @@ export type userType = {
     bio: string;
 };
 
-export type datasourceType = "ieee" | "wos" | "pubmed";
+export type datasourceType = "IEEE" | "WOS" | "PUBMED";
 
 export type resultCollectionType = {
     [source: string]: resultType[];
@@ -33,19 +33,21 @@ export type queryType = {
     searchResults: resultCollectionType;
 };
 
+export type resultDocumentType = {
+    affiliationCountry: string;
+    affiliationName: string;
+    articleDate: string;
+    authorName: string;
+    issn: string;
+    publicationName: string;
+    title: string;
+};
+
 export type resultType = {
     datasource: datasourceType;
     priority: number;
     resultId?: number;
-    document: {
-        affiliationCountry: string;
-        affiliationName: string;
-        articleDate: string;
-        authorName: string;
-        issn: string;
-        publicationName: string;
-        title: string;
-    };
+    document: resultDocumentType;
 };
 
 export type uniqueResultType = resultType & {

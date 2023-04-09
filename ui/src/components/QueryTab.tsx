@@ -35,6 +35,7 @@ interface QueryTabProps {
         source: datasourceType,
         result: resultType[]
     ) => void;
+    saveQueryResults: (qId: string) => void;
 }
 
 const QueryTab = ({
@@ -44,6 +45,7 @@ const QueryTab = ({
     removeQuery,
     removeSource,
     addResultToSource,
+    saveQueryResults,
 }: QueryTabProps) => {
     const datasources = getDataSources();
     const [showResults, setShowResults] = useState(false);
@@ -169,7 +171,12 @@ const QueryTab = ({
                                     sm="3"
                                     className="d-flex justify-content-end"
                                 >
-                                    <Button variant="success">SAVE</Button>
+                                    <Button
+                                        variant="success"
+                                        onClick={() => saveQueryResults(qId)}
+                                    >
+                                        SAVE
+                                    </Button>
                                 </Col>
                             </>
                         ) : (
