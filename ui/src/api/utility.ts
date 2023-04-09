@@ -1,4 +1,6 @@
 import {
+    categorySetType,
+    categoryType,
     datasourceType,
     queryType,
     resultDocumentType,
@@ -47,6 +49,17 @@ type returnDatasource = () => datasourceType[];
 export const getDataSources: returnDatasource = () => {
     return ["IEEE", "WOS", "PUBMED"];
 };
+
+type returnCategorySet = (cats: categoryType[]) => categorySetType;
+export const createCategorySet: returnCategorySet = (cats) => {
+    let catSet = {};
+    cats.forEach((cat) => {
+        catSet[cat.categoryId.toString()] = { ...cat };
+    });
+
+    return catSet;
+};
+
 type returnProcessedSearchResponse = (
     data: resultDocumentType[],
     source: datasourceType

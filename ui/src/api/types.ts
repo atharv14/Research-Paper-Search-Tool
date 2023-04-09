@@ -59,6 +59,7 @@ export type categorySetType = {
 };
 
 export type categoryType = {
+    categoryId: number;
     color: string;
     label: string;
     priority: number;

@@ -47,3 +47,6 @@ ui/yarn-error.log*
 
 # vscode #
 .vscode
+
+# custom
+Notes.txt

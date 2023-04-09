@@ -1,15 +1,5 @@
-import React, { useState } from "react";
-import {
-    Button,
-    Col,
-    Container,
-    FloatingLabel,
-    Form,
-    Modal,
-    Row,
-} from "react-bootstrap";
-import { categorySetType, projectType } from "../api/types";
-import CategoryGroup from "./CategoryGroup";
+import { useState } from "react";
+import { Button, Col, FloatingLabel, Form, Modal, Row } from "react-bootstrap";
 
 interface newProjectModalProps {
     show: boolean;
@@ -24,7 +14,6 @@ const NewPorjectModal = ({
 }: newProjectModalProps) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [categories, setCategories] = useState<categorySetType>({});
 
     const clearInputs = () => {
         setName("");
@@ -38,7 +27,7 @@ const NewPorjectModal = ({
     };
     return (
         <Modal size="lg" show={show} centered>
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title>Project Details</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -71,15 +60,6 @@ const NewPorjectModal = ({
                             />
                         </FloatingLabel>
                     </Form.Group>
-
-                    {/* <Form.Label>Categories</Form.Label>
-
-                    <CategoryGroup
-                        categories={categories}
-                        setCategories={(cats: categorySetType) =>
-                            setCategories(cats)
-                        }
-                    /> */}
                 </Form>
             </Modal.Body>
             <Modal.Footer>

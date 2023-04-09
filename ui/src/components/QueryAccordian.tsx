@@ -27,8 +27,7 @@ const QueryAccordian = ({ initialQueries, projectId }: QueryAccordianProps) => {
     };
     const removeSource = (qId: string, source: string) => {
         let updatedQueries = { ...queries };
-        console.log(updatedQueries);
-        delete updatedQueries[qId]["results"][source];
+        delete updatedQueries[qId]["searchResults"][source];
         setQueries(updatedQueries);
     };
     const removeQuery = (qId: string) => {
