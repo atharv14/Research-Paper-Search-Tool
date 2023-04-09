@@ -84,7 +84,7 @@ const QueryTab = ({
     return (
         <>
             <Accordion.Item eventKey={qId}>
-                <Accordion.Header>New Query</Accordion.Header>
+                <Accordion.Header>Query</Accordion.Header>
                 <Accordion.Body>
                     <Row>
                         <Col md="11">
@@ -97,6 +97,7 @@ const QueryTab = ({
                                 <Button
                                     variant="secondary"
                                     onClick={() => buildQuery(qId)}
+                                    disabled={query.queryId ? true : false}
                                 >
                                     Use Query Builder
                                 </Button>
@@ -124,6 +125,7 @@ const QueryTab = ({
                                     qId={qId}
                                     removeSource={removeSource}
                                     fetchResults={fetchResults}
+                                    freeze={query.queryId ? true : false}
                                 />
                             )
                         )}
@@ -133,59 +135,69 @@ const QueryTab = ({
                             <Spinner animation="border" variant="success" />
                         )}
                     </Row>
-                    <Row className="justify-content-between mt-2">
-                        <Col sm="3">
-                            <DropdownButton
-                                as={ButtonGroup}
-                                variant="secondary"
-                                title="Add Datasource"
-                                onSelect={(val) =>
-                                    addResultToSource(
-                                        qId,
-                                        val as datasourceType,
-                                        []
-                                    )
-                                }
-                            >
-                                {datasources.map((source) => (
-                                    <Dropdown.Item
-                                        key={source}
-                                        eventKey={source}
-                                    >
-                                        {source}
-                                    </Dropdown.Item>
-                                ))}
-                            </DropdownButton>
-                        </Col>
-                        {Object.keys(query.searchResults).length ? (
-                            <>
-                                <Col
-                                    sm="3"
-                                    className="d-flex justify-content-center"
+                    {!query.queryId ? (
+                        <Row className="justify-content-between mt-2">
+                            <Col sm="3">
+                                <DropdownButton
+                                    as={ButtonGroup}
+                                    variant="secondary"
+                                    title="Add Datasource"
+                                    onSelect={(val) =>
+                                        addResultToSource(
+                                            qId,
+                                            val as datasourceType,
+                                            []
+                                        )
+                                    }
                                 >
-                                    <Button
-                                        variant="outline-success"
-                                        onClick={() => setShowResults(true)}
+                                    {datasources.map((source) => (
+                                        <Dropdown.Item
+                                            key={source}
+                                            eventKey={source}
+                                        >
+                                            {source}
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
+                            </Col>
+                            {Object.keys(query.searchResults).length ? (
+                                <>
+                                    <Col
+                                        sm="3"
+                                        className="d-flex justify-content-center"
                                     >
-                                        Show All {allResults.length}
-                                    </Button>
-                                </Col>
-                                <Col
-                                    sm="3"
-                                    className="d-flex justify-content-end"
-                                >
-                                    <Button
-                                        variant="success"
-                                        onClick={() => saveQueryResults(qId)}
+                                        <Button
+                                            variant="outline-success"
+                                            onClick={() => setShowResults(true)}
+                                        >
+                                            Show All {allResults.length}
+                                        </Button>
+                                    </Col>
+                                    <Col
+                                        sm="3"
+                                        className="d-flex justify-content-end"
                                     >
-                                        SAVE
-                                    </Button>
-                                </Col>
-                            </>
-                        ) : (
-                            <></>
-                        )}
-                    </Row>
+                                        <Button
+                                            variant="success"
+                                            onClick={() =>
+                                                saveQueryResults(qId)
+                                            }
+                                        >
+                                            SAVE
+                                        </Button>
+                                    </Col>
+                                </>
+                            ) : (
+                                <></>
+                            )}
+                        </Row>
+                    ) : (
+                        <Row className="justify-content-center mt-2">
+                            <Col md={1}>
+                                <Button variant="success">CURATE</Button>
+                            </Col>
+                        </Row>
+                    )}
                 </Accordion.Body>
             </Accordion.Item>
             <CumulativeResultsTableModal

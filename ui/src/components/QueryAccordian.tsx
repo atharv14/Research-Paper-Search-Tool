@@ -83,7 +83,15 @@ const QueryAccordian = ({
     const saveQuery = (qId: string) => {
         saveQueries(projectId, queries[qId])
             .then(({ queryId, searchResults, searchText }) => {
-                console.log("Update Query for queryId and results");
+                setQueries({
+                    ...queries,
+                    [qId]: {
+                        ...queries[qId],
+                        queryId,
+                        searchResults,
+                        searchText,
+                    },
+                });
             })
             .catch((e) => {
                 alert("Something Went wrong");
