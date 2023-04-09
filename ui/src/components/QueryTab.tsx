@@ -15,6 +15,7 @@ import {
 import { FiTrash } from "react-icons/fi";
 import { search } from "../api/search";
 import {
+    categorySetType,
     datasourceType,
     queryType,
     resultType,
@@ -27,6 +28,7 @@ import QuerySourceFetcher from "./QuerySourceFetcher";
 interface QueryTabProps {
     qId: string;
     query: queryType;
+    categories: categorySetType;
     buildQuery: (qId: string) => void;
     removeQuery: (qId: string) => void;
     removeSource: (qId: string, datasource: string) => void;
@@ -41,6 +43,7 @@ interface QueryTabProps {
 const QueryTab = ({
     qId,
     query,
+    categories,
     buildQuery,
     removeQuery,
     removeSource,
@@ -53,7 +56,7 @@ const QueryTab = ({
     const [isLoading, setIsLoading] = useState(false);
     const fetchResults = (datasource: datasourceType) => {
         setIsLoading(true);
-        search({ datasource, queryText: query.searchText })
+        search({ datasource, queryText: query.searchText, categories })
             .then((data) => {
                 addResultToSource(qId, datasource, data);
                 updateAllResults();

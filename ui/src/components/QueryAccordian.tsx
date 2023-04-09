@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Accordion, Button, Container } from "react-bootstrap";
 import {
+    categorySetType,
     datasourceType,
     querySetType,
     queryType,
@@ -14,9 +15,14 @@ import { saveQueries } from "../api/query";
 type QueryAccordianProps = {
     initialQueries: querySetType;
     projectId: number;
+    categories: categorySetType;
 };
 
-const QueryAccordian = ({ initialQueries, projectId }: QueryAccordianProps) => {
+const QueryAccordian = ({
+    initialQueries,
+    projectId,
+    categories,
+}: QueryAccordianProps) => {
     const [showQueryBuilderModal, setShowQueryBuilderModal] = useState(false);
     const [currentQid, setCurrentQId] = useState(""); // remember query id for which query text is being generated in modal
     const [queries, setQueries] = useState(initialQueries);
@@ -101,6 +107,7 @@ const QueryAccordian = ({ initialQueries, projectId }: QueryAccordianProps) => {
                                 removeSource={removeSource}
                                 addResultToSource={addResultToSource}
                                 saveQueryResults={saveQuery}
+                                categories={categories}
                             />
                         ))
                         .reverse()}

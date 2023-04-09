@@ -97,6 +97,7 @@ const Project = () => {
                                 projectId={parseInt(
                                     searchParams.get("id") || "0"
                                 )}
+                                categories={categories}
                             />
                         </Container>
                     ) : (

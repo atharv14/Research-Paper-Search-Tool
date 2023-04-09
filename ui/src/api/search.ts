@@ -1,11 +1,12 @@
 import axios from "axios";
 import { API_URI } from "./constants";
-import { datasourceType } from "./types";
+import { categorySetType, datasourceType } from "./types";
 import { getConfig, processSearchResponse } from "./utility";
 
 type searchBody = {
     datasource: string;
     queryText: string;
+    categories: categorySetType;
 };
 
 const search = async (data: searchBody) => {
@@ -23,7 +24,8 @@ const search = async (data: searchBody) => {
     console.log(resp.data);
     const processedData = processSearchResponse(
         resp.data,
-        data.datasource as datasourceType
+        data.datasource as datasourceType,
+        data.categories
     );
     return processedData.slice(0, 10);
 };

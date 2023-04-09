@@ -62,16 +62,19 @@ export const createCategorySet: returnCategorySet = (cats) => {
 
 type returnProcessedSearchResponse = (
     data: resultDocumentType[],
-    source: datasourceType
+    source: datasourceType,
+    categories: categorySetType
 ) => resultType[];
 export const processSearchResponse: returnProcessedSearchResponse = (
     data,
-    source
+    source,
+    categories
 ) => {
+    const defaultCat = Object.values(categories)[0];
     const processedData: resultType[] = data.map((doc) => {
         return {
             datasource: source,
-            priority: 0,
+            priority: defaultCat.priority,
             document: doc,
         };
     });
