@@ -1,23 +1,31 @@
-import { datasourceType, uniqueResultType } from "./types";
+import {
+    categorySetType,
+    categoryType,
+    datasourceType,
+    queryType,
+    resultDocumentType,
+    resultType,
+    uniqueResultType,
+} from "./types";
 
-const getToken = () => {
+export const getToken = () => {
     const token = localStorage.getItem("token");
     return token;
 };
 
-const setToken = (token: string) => {
+export const setToken = (token: string) => {
     localStorage.setItem("token", token);
 };
 
-const unsetToken = () => {
+export const unsetToken = () => {
     localStorage.removeItem("token");
 };
 
-const isUserLoggedIn = () => {
+export const isUserLoggedIn = () => {
     return getToken();
 };
 
-const getConfig = () => {
+export const getConfig = () => {
     const token = getToken();
     return {
         headers: {
@@ -26,29 +34,49 @@ const getConfig = () => {
     };
 };
 
-const processQueryText = (q: string) => {
+export const processQueryText = (q: string) => {
     return q.replaceAll("keyword = ", "");
 };
 
-const filterResultsByTitle = (arr: uniqueResultType[]) => {
+export const filterResultsByTitle = (arr: uniqueResultType[]) => {
     let f: string[] = [];
     return arr.filter((n) => {
-        return f.indexOf(n.title) == -1 && f.push(n.title);
+        return f.indexOf(n.document.title) == -1 && f.push(n.document.title);
     });
 };
 
 type returnDatasource = () => datasourceType[];
-const getDataSources: returnDatasource = () => {
-    return ["ieee", "wos", "pubmed"];
+export const getDataSources: returnDatasource = () => {
+    return ["IEEE", "WOS", "PUBMED"];
 };
 
-export {
-    getToken,
-    setToken,
-    isUserLoggedIn,
-    unsetToken,
-    getConfig,
-    getDataSources,
-    processQueryText,
-    filterResultsByTitle,
+type returnCategorySet = (cats: categoryType[]) => categorySetType;
+export const createCategorySet: returnCategorySet = (cats) => {
+    let catSet = {};
+    cats.forEach((cat) => {
+        catSet[cat.categoryId.toString()] = { ...cat };
+    });
+
+    return catSet;
+};
+
+type returnProcessedSearchResponse = (
+    data: resultDocumentType[],
+    source: datasourceType,
+    categories: categorySetType
+) => resultType[];
+export const processSearchResponse: returnProcessedSearchResponse = (
+    data,
+    source,
+    categories
+) => {
+    const defaultCat = Object.values(categories)[0];
+    const processedData: resultType[] = data.map((doc) => {
+        return {
+            datasource: source,
+            priority: defaultCat.priority,
+            document: doc,
+        };
+    });
+    return processedData;
 };

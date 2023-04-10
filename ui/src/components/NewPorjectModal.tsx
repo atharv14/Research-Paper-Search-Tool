@@ -1,14 +1,5 @@
-import React, { useState } from "react";
-import {
-    Button,
-    Col,
-    Container,
-    FloatingLabel,
-    Form,
-    Modal,
-    Row,
-} from "react-bootstrap";
-import { projectType } from "../api/types";
+import { useState } from "react";
+import { Button, Col, FloatingLabel, Form, Modal, Row } from "react-bootstrap";
 
 interface newProjectModalProps {
     show: boolean;
@@ -36,7 +27,7 @@ const NewPorjectModal = ({
     };
     return (
         <Modal size="lg" show={show} centered>
-            <Modal.Header closeButton>
+            <Modal.Header>
                 <Modal.Title>Project Details</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -55,18 +46,20 @@ const NewPorjectModal = ({
                             />
                         </Col>
                     </Form.Group>
-                    <FloatingLabel
-                        controlId="floatingTextarea2"
-                        label="Description"
-                    >
-                        <Form.Control
-                            as="textarea"
-                            placeholder="Leave a comment here"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            style={{ height: "100px" }}
-                        />
-                    </FloatingLabel>
+                    <Form.Group className="mb-2">
+                        <FloatingLabel
+                            controlId="floatingTextarea2"
+                            label="Description"
+                        >
+                            <Form.Control
+                                as="textarea"
+                                placeholder="Leave a comment here"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                style={{ height: "100px" }}
+                            />
+                        </FloatingLabel>
+                    </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Accordion, Button, Container } from "react-bootstrap";
 import {
+    categorySetType,
     datasourceType,
     querySetType,
     queryType,
@@ -9,21 +10,22 @@ import {
 import QueryBuilderModal from "./QueryBuilderModal";
 import QueryTab from "./QueryTab";
 import { v4 as uuidv4 } from "uuid";
-import { getQuery } from "../api/query";
+import { saveQueries } from "../api/query";
 
 type QueryAccordianProps = {
-    searchQuery: (qId: string) => void;
+    initialQueries: querySetType;
+    projectId: number;
+    categories: categorySetType;
 };
 
-const QueryAccordian = () => {
+const QueryAccordian = ({
+    initialQueries,
+    projectId,
+    categories,
+}: QueryAccordianProps) => {
     const [showQueryBuilderModal, setShowQueryBuilderModal] = useState(false);
     const [currentQid, setCurrentQId] = useState(""); // remember query id for which query text is being generated in modal
-    const [queries, setQueries] = useState<querySetType>({});
-
-    useEffect(() => {
-        const data = getQuery();
-        setQueries(data);
-    }, []);
+    const [queries, setQueries] = useState(initialQueries);
 
     const buildQuery = (qId: string) => {
         setCurrentQId(qId);
@@ -31,8 +33,7 @@ const QueryAccordian = () => {
     };
     const removeSource = (qId: string, source: string) => {
         let updatedQueries = { ...queries };
-        console.log(updatedQueries);
-        delete updatedQueries[qId]["results"][source];
+        delete updatedQueries[qId]["searchResults"][source];
         setQueries(updatedQueries);
     };
     const removeQuery = (qId: string) => {
@@ -44,19 +45,21 @@ const QueryAccordian = () => {
     const addQuery = () => {
         const newId: string = uuidv4();
         const newQuery: queryType = {
-            name: "new query",
-            text: "",
-            results: {},
+            queryId: 0,
+            searchText: "",
+            format: "(1=1)",
+            searchResults: {},
         };
         setQueries({ ...queries, [newId]: newQuery });
     };
 
-    const setCurrentQuery = (qS: string) => {
+    const setCurrentQuery = (qS: string, qF: string) => {
         setQueries({
             ...queries,
             [currentQid]: {
                 ...queries[currentQid],
-                text: qS,
+                searchText: qS,
+                format: qF,
             },
         });
         setShowQueryBuilderModal(false);
@@ -69,12 +72,23 @@ const QueryAccordian = () => {
     ) => {
         let updatedQueries = { ...queries };
         if (
-            updatedQueries[qId].results[source] &&
-            updatedQueries[qId].results[source].length !== 0
+            updatedQueries[qId].searchResults[source] &&
+            updatedQueries[qId].searchResults[source].length !== 0
         )
             return; // avoid overwrite of results
-        updatedQueries[qId].results[source] = results;
+        updatedQueries[qId].searchResults[source] = results;
         setQueries(updatedQueries);
+    };
+
+    const saveQuery = (qId: string) => {
+        saveQueries(projectId, queries[qId])
+            .then(({ queryId, searchResults, searchText }) => {
+                console.log("Update Query for queryId and results");
+            })
+            .catch((e) => {
+                alert("Something Went wrong");
+                console.log(e);
+            });
     };
 
     return (
@@ -92,6 +106,8 @@ const QueryAccordian = () => {
                                 removeQuery={removeQuery}
                                 removeSource={removeSource}
                                 addResultToSource={addResultToSource}
+                                saveQueryResults={saveQuery}
+                                categories={categories}
                             />
                         ))
                         .reverse()}
@@ -99,6 +115,9 @@ const QueryAccordian = () => {
                 <QueryBuilderModal
                     show={showQueryBuilderModal}
                     saveQuery={setCurrentQuery}
+                    incomingQuery={
+                        queries[currentQid] ? queries[currentQid]["format"] : ""
+                    }
                     handleClose={() => setShowQueryBuilderModal(false)}
                 />
             </Container>

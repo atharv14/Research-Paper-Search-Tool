@@ -31,20 +31,15 @@ const CumulativeResultsTableModal = ({
                                 </tr>
                             </thead>
                             <tbody>
-                                {res.map(
-                                    (
-                                        { title, articleDate, issn, source },
-                                        i
-                                    ) => (
-                                        <tr key={i}>
-                                            <td>{i + 1}</td>
-                                            <td>{title}</td>
-                                            <td>{articleDate}</td>
-                                            <td>{issn}</td>
-                                            <td>{source.toUpperCase()}</td>
-                                        </tr>
-                                    )
-                                )}
+                                {res.map(({ document, source }, i) => (
+                                    <tr key={i}>
+                                        <td>{i + 1}</td>
+                                        <td>{document.title}</td>
+                                        <td>{document.articleDate}</td>
+                                        <td>{document.issn}</td>
+                                        <td>{source.toUpperCase()}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </Table>
                     </Col>

@@ -15,6 +15,7 @@ import {
 import { FiTrash } from "react-icons/fi";
 import { search } from "../api/search";
 import {
+    categorySetType,
     datasourceType,
     queryType,
     resultType,
@@ -27,6 +28,7 @@ import QuerySourceFetcher from "./QuerySourceFetcher";
 interface QueryTabProps {
     qId: string;
     query: queryType;
+    categories: categorySetType;
     buildQuery: (qId: string) => void;
     removeQuery: (qId: string) => void;
     removeSource: (qId: string, datasource: string) => void;
@@ -35,15 +37,18 @@ interface QueryTabProps {
         source: datasourceType,
         result: resultType[]
     ) => void;
+    saveQueryResults: (qId: string) => void;
 }
 
 const QueryTab = ({
     qId,
     query,
+    categories,
     buildQuery,
     removeQuery,
     removeSource,
     addResultToSource,
+    saveQueryResults,
 }: QueryTabProps) => {
     const datasources = getDataSources();
     const [showResults, setShowResults] = useState(false);
@@ -51,7 +56,7 @@ const QueryTab = ({
     const [isLoading, setIsLoading] = useState(false);
     const fetchResults = (datasource: datasourceType) => {
         setIsLoading(true);
-        search({ datasource, queryText: query.text })
+        search({ datasource, queryText: query.searchText, categories })
             .then((data) => {
                 addResultToSource(qId, datasource, data);
                 updateAllResults();
@@ -66,7 +71,7 @@ const QueryTab = ({
     // TODO: update on add result and delete result as well
     const updateAllResults = () => {
         let updatedAllResults: uniqueResultType[] = [];
-        Object.entries(query.results).forEach(([source, res]) => {
+        Object.entries(query.searchResults).forEach(([source, res]) => {
             let temp = res.map((row) => {
                 return { ...row, source };
             });
@@ -79,7 +84,7 @@ const QueryTab = ({
     return (
         <>
             <Accordion.Item eventKey={qId}>
-                <Accordion.Header>{query.name}</Accordion.Header>
+                <Accordion.Header>New Query</Accordion.Header>
                 <Accordion.Body>
                     <Row>
                         <Col md="11">
@@ -87,7 +92,7 @@ const QueryTab = ({
                                 <Form.Control
                                     placeholder="Write your query..."
                                     disabled
-                                    value={query.text}
+                                    value={query.searchText}
                                 />
                                 <Button
                                     variant="secondary"
@@ -110,16 +115,18 @@ const QueryTab = ({
                         </Col>
                     </Row>
                     <Row className="justify-content-center">
-                        {Object.entries(query.results).map(([source, res]) => (
-                            <QuerySourceFetcher
-                                key={source}
-                                datasource={source as datasourceType}
-                                res={res}
-                                qId={qId}
-                                removeSource={removeSource}
-                                fetchResults={fetchResults}
-                            />
-                        ))}
+                        {Object.entries(query.searchResults).map(
+                            ([source, res]) => (
+                                <QuerySourceFetcher
+                                    key={source}
+                                    datasource={source as datasourceType}
+                                    res={res}
+                                    qId={qId}
+                                    removeSource={removeSource}
+                                    fetchResults={fetchResults}
+                                />
+                            )
+                        )}
                     </Row>
                     <Row className="justify-content-center">
                         {isLoading && (
@@ -150,7 +157,7 @@ const QueryTab = ({
                                 ))}
                             </DropdownButton>
                         </Col>
-                        {Object.keys(query.results).length ? (
+                        {Object.keys(query.searchResults).length ? (
                             <>
                                 <Col
                                     sm="3"
@@ -167,7 +174,12 @@ const QueryTab = ({
                                     sm="3"
                                     className="d-flex justify-content-end"
                                 >
-                                    <Button variant="success">SAVE</Button>
+                                    <Button
+                                        variant="success"
+                                        onClick={() => saveQueryResults(qId)}
+                                    >
+                                        SAVE
+                                    </Button>
                                 </Col>
                             </>
                         ) : (

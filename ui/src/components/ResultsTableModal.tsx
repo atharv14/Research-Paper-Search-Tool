@@ -30,12 +30,12 @@ const ResultsTableModal = ({
                                 </tr>
                             </thead>
                             <tbody>
-                                {res.map(({ title, articleDate, issn }, i) => (
+                                {res.map(({ document }, i) => (
                                     <tr key={i}>
                                         <td>{i + 1}</td>
-                                        <td>{title}</td>
-                                        <td>{articleDate}</td>
-                                        <td>{issn}</td>
+                                        <td>{document.title}</td>
+                                        <td>{document.articleDate}</td>
+                                        <td>{document.issn}</td>
                                     </tr>
                                 ))}
                             </tbody>
