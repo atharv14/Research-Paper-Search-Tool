@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Accordion, Button, Container } from "react-bootstrap";
+import { Accordion, Button, Container, Spinner } from "react-bootstrap";
 import {
     categorySetType,
     datasourceType,
@@ -26,6 +26,7 @@ const QueryAccordian = ({
     const [showQueryBuilderModal, setShowQueryBuilderModal] = useState(false);
     const [currentQid, setCurrentQId] = useState(""); // remember query id for which query text is being generated in modal
     const [queries, setQueries] = useState(initialQueries);
+    const [isLoading, setIsLoading] = useState(false);
 
     const buildQuery = (qId: string) => {
         setCurrentQId(qId);
@@ -81,6 +82,7 @@ const QueryAccordian = ({
     };
 
     const saveQuery = (qId: string) => {
+        setIsLoading(true);
         saveQueries(projectId, queries[qId])
             .then(({ queryId, searchResults, searchText }) => {
                 setQueries({
@@ -96,30 +98,35 @@ const QueryAccordian = ({
             .catch((e) => {
                 alert("Something Went wrong");
                 console.log(e);
-            });
+            })
+            .finally(() => setIsLoading(false));
     };
 
     return (
         <>
             <Button onClick={addQuery}>Add Query</Button>
             <Container className="query-builder p-0">
-                <Accordion defaultActiveKey="0" alwaysOpen>
-                    {Object.entries(queries)
-                        .map(([qId, query]) => (
-                            <QueryTab
-                                key={qId}
-                                qId={qId}
-                                query={query}
-                                buildQuery={buildQuery}
-                                removeQuery={removeQuery}
-                                removeSource={removeSource}
-                                addResultToSource={addResultToSource}
-                                saveQueryResults={saveQuery}
-                                categories={categories}
-                            />
-                        ))
-                        .reverse()}
-                </Accordion>
+                {!isLoading ? (
+                    <Accordion defaultActiveKey={currentQid} alwaysOpen>
+                        {Object.entries(queries)
+                            .map(([qId, query]) => (
+                                <QueryTab
+                                    key={qId}
+                                    qId={qId}
+                                    query={query}
+                                    buildQuery={buildQuery}
+                                    removeQuery={removeQuery}
+                                    removeSource={removeSource}
+                                    addResultToSource={addResultToSource}
+                                    saveQueryResults={saveQuery}
+                                    categories={categories}
+                                />
+                            ))
+                            .reverse()}
+                    </Accordion>
+                ) : (
+                    <Spinner />
+                )}
                 <QueryBuilderModal
                     show={showQueryBuilderModal}
                     saveQuery={setCurrentQuery}

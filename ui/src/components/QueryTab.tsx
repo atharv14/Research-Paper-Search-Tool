@@ -24,6 +24,7 @@ import {
 import { filterResultsByTitle, getDataSources } from "../api/utility";
 import CumulativeResultsTableModal from "./CumulativeResultsTableModal";
 import QuerySourceFetcher from "./QuerySourceFetcher";
+import { Link } from "react-router-dom";
 
 interface QueryTabProps {
     qId: string;
@@ -68,7 +69,7 @@ const QueryTab = ({
             .finally(() => setIsLoading(false));
     };
 
-    // TODO: update on add result and delete result as well
+    // TODO: update on add result and delete result as well (on delete call)
     const updateAllResults = () => {
         let updatedAllResults: uniqueResultType[] = [];
         Object.entries(query.searchResults).forEach(([source, res]) => {
@@ -80,7 +81,6 @@ const QueryTab = ({
         let uniqueResults = filterResultsByTitle(updatedAllResults);
         setAllResults(uniqueResults);
     };
-    // useEffect(updateAllResults, [query]);
     return (
         <>
             <Accordion.Item eventKey={qId}>
@@ -160,7 +160,7 @@ const QueryTab = ({
                                     ))}
                                 </DropdownButton>
                             </Col>
-                            {Object.keys(query.searchResults).length ? (
+                            {Object.values(query.searchResults).length ? (
                                 <>
                                     <Col
                                         sm="3"
@@ -194,7 +194,12 @@ const QueryTab = ({
                     ) : (
                         <Row className="justify-content-center mt-2">
                             <Col md={1}>
-                                <Button variant="success">CURATE</Button>
+                                <Link
+                                    to={`/query/?id=${query.queryId}`}
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    <Button variant="success">CURATE</Button>
+                                </Link>
                             </Col>
                         </Row>
                     )}
