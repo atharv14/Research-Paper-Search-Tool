@@ -9,6 +9,7 @@ interface QuerySourceFetcherProps {
     qId: string;
     datasource: datasourceType;
     res: resultType[];
+    freeze: boolean;
     removeSource: (qId: string, datasource: datasourceType) => void;
     fetchResults: (datasource: datasourceType) => void;
 }
@@ -17,14 +18,13 @@ const QuerySourceFetcher = ({
     qId,
     datasource,
     res,
+    freeze,
     removeSource,
     fetchResults,
 }: QuerySourceFetcherProps) => {
     // const [isLoading, setIsLoading] = useState(false);
     const [showResults, setShowResults] = useState(false);
-    const [disableFetch, setDisableFetch] = useState(false);
     const handleFetch = () => {
-        setDisableFetch(true);
         fetchResults(datasource);
     };
 
@@ -38,6 +38,7 @@ const QuerySourceFetcher = ({
                             <Button
                                 variant="danger"
                                 onClick={() => removeSource(qId, datasource)}
+                                disabled={freeze}
                             >
                                 <FiTrash
                                     className="cursor-pointer"
@@ -58,7 +59,7 @@ const QuerySourceFetcher = ({
                             <Button
                                 variant="success"
                                 onClick={handleFetch}
-                                disabled={disableFetch}
+                                disabled={freeze}
                             >
                                 FETCH
                             </Button>
