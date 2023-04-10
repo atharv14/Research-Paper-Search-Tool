@@ -1,11 +1,18 @@
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import {
+    Alert,
+    Button,
+    Col,
+    Container,
+    Row,
+    Spinner,
+    Table,
+} from "react-bootstrap";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import ProjectCard from "../components/ProjectCard";
-import { getProjects, postProject } from "../api/project";
 import { useEffect, useState } from "react";
-import { projectType, queryType } from "../api/types";
-import { isUserLoggedIn } from "../api/utility";
-import NewPorjectModal from "../components/NewPorjectModal";
+import { categorySetType, projectType, queryType } from "../api/types";
+import { getQuery } from "../api/query";
+import { getCategories } from "../api/category";
+import { getColor } from "../api/utility";
 const dummyQuery: queryType = {
     queryId: 0,
     searchText: "",
@@ -14,22 +21,36 @@ const dummyQuery: queryType = {
 const Query = () => {
     const [query, setQuery] = useState<queryType>(dummyQuery);
     const [isLoading, setIsLoading] = useState(false);
+    const [currentSource, setCurrentSource] = useState("");
+    const [categories, setCategories] = useState<categorySetType>({});
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const fetchQuery = (id: number) => {
-        // getProjects()
-        //     .then((data) => setProjects(data))
-        //     .catch((e) => {
-        //         alert("Something went wrong");
-        //         console.log(e);
-        //     })
-        //     .finally(() => setIsLoading(false));
+        getQuery(id)
+            .then((data) => setQuery(data))
+            .catch((e) => {
+                alert("Something went wrong");
+                console.log(e);
+            })
+            .finally(() => setIsLoading(false));
+    };
+
+    const fetchCategory = (pId: number) => {
+        getCategories(pId)
+            .then((data) => setCategories(data))
+            .catch((e) => {
+                alert("Something went wrong");
+                console.log(e);
+            })
+            .finally(() => setIsLoading(false));
     };
 
     useEffect(() => {
         const id = parseInt(searchParams.get("id") || "0");
-        if (id === 0) navigate("/"); // send to dashboard if no id in url
+        const pId = parseInt(searchParams.get("pId") || "0");
+        if (id === 0 || pId === 0) navigate("/"); // send to dashboard if no id in url
         fetchQuery(id);
+        fetchCategory(pId);
     }, []);
 
     return (
@@ -50,7 +71,94 @@ const Query = () => {
                 </Row>
             </Container>
             <Container>
-                {!isLoading ? <p>{query.searchText}</p> : <Spinner />}
+                {!isLoading ? (
+                    <>
+                        <Container>
+                            <p>
+                                Query:
+                                <Alert variant="secondary" className="p-2 m-1">
+                                    <code>{query.searchText}</code>
+                                </Alert>
+                            </p>
+                        </Container>
+                        <Container>
+                            <Row>
+                                {Object.keys(query.searchResults).map(
+                                    (source) => (
+                                        <Col md={1}>
+                                            <Button
+                                                variant={
+                                                    currentSource === source
+                                                        ? "primary"
+                                                        : "outline-primary"
+                                                }
+                                                onClick={() =>
+                                                    setCurrentSource(source)
+                                                }
+                                            >
+                                                {source}
+                                            </Button>
+                                        </Col>
+                                    )
+                                )}
+                            </Row>
+                            <Row>
+                                <Col>
+                                    {currentSource ? (
+                                        <Table striped>
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Title</th>
+                                                    <th>Article Date</th>
+                                                    <th>ISSN</th>
+                                                    <th>Category</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {Object.values(
+                                                    query.searchResults[
+                                                        currentSource
+                                                    ]
+                                                ).map(
+                                                    (
+                                                        { document, priority },
+                                                        i
+                                                    ) => (
+                                                        <tr key={i}>
+                                                            <td>{i + 1}</td>
+                                                            <td>
+                                                                {document.title}
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    document.articleDate
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                {document.issn}
+                                                            </td>
+                                                            <td>
+                                                                {getColor(
+                                                                    categories,
+                                                                    priority
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                )}
+                                            </tbody>
+                                        </Table>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Col>
+                            </Row>
+                        </Container>
+                    </>
+                ) : (
+                    <Spinner />
+                )}
             </Container>
             {/* <NewPorjectModal
                 show={showNewProjectModal}

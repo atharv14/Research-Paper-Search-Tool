@@ -11,6 +11,7 @@ import QueryBuilderModal from "./QueryBuilderModal";
 import QueryTab from "./QueryTab";
 import { v4 as uuidv4 } from "uuid";
 import { saveQueries } from "../api/query";
+import { useNavigate } from "react-router-dom";
 
 type QueryAccordianProps = {
     initialQueries: querySetType;
@@ -27,10 +28,15 @@ const QueryAccordian = ({
     const [currentQid, setCurrentQId] = useState(""); // remember query id for which query text is being generated in modal
     const [queries, setQueries] = useState(initialQueries);
     const [isLoading, setIsLoading] = useState(false);
-
+    const navigate = useNavigate();
     const buildQuery = (qId: string) => {
         setCurrentQId(qId);
         setShowQueryBuilderModal(true);
+    };
+
+    const curateQuery = (queryId: number) => {
+        const link = `/query/?id=${queryId}&pId=${projectId}`;
+        navigate(link);
     };
     const removeSource = (qId: string, source: string) => {
         let updatedQueries = { ...queries };
@@ -114,6 +120,7 @@ const QueryAccordian = ({
                                     key={qId}
                                     qId={qId}
                                     query={query}
+                                    curate={curateQuery}
                                     buildQuery={buildQuery}
                                     removeQuery={removeQuery}
                                     removeSource={removeSource}

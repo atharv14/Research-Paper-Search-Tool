@@ -80,3 +80,9 @@ export const processSearchResponse: returnProcessedSearchResponse = (
     });
     return processedData;
 };
+
+type returnColor = (cats: categorySetType, p: number) => string;
+export const getColor: returnColor = (cats, p) => {
+    const cat = Object.values(cats).find(({ priority }) => priority === p);
+    return cat?.color || "#00000";
+};

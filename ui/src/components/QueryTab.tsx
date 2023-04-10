@@ -24,13 +24,13 @@ import {
 import { filterResultsByTitle, getDataSources } from "../api/utility";
 import CumulativeResultsTableModal from "./CumulativeResultsTableModal";
 import QuerySourceFetcher from "./QuerySourceFetcher";
-import { Link } from "react-router-dom";
 
 interface QueryTabProps {
     qId: string;
     query: queryType;
     categories: categorySetType;
     buildQuery: (qId: string) => void;
+    curate: (queryId: number) => void;
     removeQuery: (qId: string) => void;
     removeSource: (qId: string, datasource: string) => void;
     addResultToSource: (
@@ -46,6 +46,7 @@ const QueryTab = ({
     query,
     categories,
     buildQuery,
+    curate,
     removeQuery,
     removeSource,
     addResultToSource,
@@ -194,12 +195,12 @@ const QueryTab = ({
                     ) : (
                         <Row className="justify-content-center mt-2">
                             <Col md={1}>
-                                <Link
-                                    to={`/query/?id=${query.queryId}`}
-                                    style={{ textDecoration: "none" }}
+                                <Button
+                                    variant="success"
+                                    onClick={() => curate(query.queryId)}
                                 >
-                                    <Button variant="success">CURATE</Button>
-                                </Link>
+                                    CURATE
+                                </Button>
                             </Col>
                         </Row>
                     )}
