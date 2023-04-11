@@ -117,6 +117,12 @@ public class ScopusSearchService implements SearchService {
                     documentBuilder.affiliationNames(new ArrayList<>(affiliationNames));
                 }
 
+                //url
+                JsonNode prismUrl = entry.get("prism:url");
+                if (entry.has("prism:url") && prismUrl != null) {
+                    documentBuilder.url(prismUrl.asText());
+                }
+
                 documents.add(documentBuilder.build());
             }
 
