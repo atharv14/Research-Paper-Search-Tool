@@ -38,6 +38,8 @@ public class WosSearchService implements SearchService {
     @Value("${api.wos.firstRecord}")
     private String firstRecord;
 
+    @Value("${api.wos.source.url}")
+    private String url;
     @Override
     public String getServiceUrl() {
         return apiWosUrl;
@@ -126,8 +128,16 @@ public class WosSearchService implements SearchService {
                 } else if (otherNode.has(identifierIssn)) {
                     documentBuilder.issn(otherNode.get(identifierIssn).get(0).asText());
                 }
+
                 //Affiliation Name
                 // Unable to retrieve it from the JSON response
+
+                //URL
+                JsonNode utNode = documentNode.get("UT");
+                if (utNode != null && documentNode.has("UT")) {
+                    String urlLink = url + utNode.asText();
+                    documentBuilder.url(urlLink);
+                }
 
                 documents.add(documentBuilder.build());
 
