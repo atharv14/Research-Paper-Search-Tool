@@ -19,9 +19,12 @@ import {
     datasourceType,
     queryType,
     resultType,
-    uniqueResultType,
 } from "../api/types";
-import { filterResultsByTitle, getDataSources } from "../api/utility";
+import {
+    filterResultsByTitle,
+    getDataSources,
+    mergeResults,
+} from "../api/utility";
 import CumulativeResultsTableModal from "./CumulativeResultsTableModal";
 import QuerySourceFetcher from "./QuerySourceFetcher";
 
@@ -54,7 +57,7 @@ const QueryTab = ({
 }: QueryTabProps) => {
     const datasources = getDataSources();
     const [showResults, setShowResults] = useState(false);
-    const [allResults, setAllResults] = useState<uniqueResultType[]>([]);
+    const [allResults, setAllResults] = useState<resultType[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const fetchResults = (datasource: datasourceType) => {
         setIsLoading(true);
@@ -72,14 +75,7 @@ const QueryTab = ({
 
     // TODO: update on add result and delete result as well (on delete call)
     const updateAllResults = () => {
-        let updatedAllResults: uniqueResultType[] = [];
-        Object.entries(query.searchResults).forEach(([source, res]) => {
-            let temp = res.map((row) => {
-                return { ...row, source };
-            });
-            updatedAllResults.push(...temp);
-        });
-        let uniqueResults = filterResultsByTitle(updatedAllResults);
+        const uniqueResults = mergeResults(Object.values(query.searchResults));
         setAllResults(uniqueResults);
     };
     return (

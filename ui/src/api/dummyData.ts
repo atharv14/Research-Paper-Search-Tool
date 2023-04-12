@@ -1,6 +1,6 @@
-import { projectType } from "./types";
+import { projectType, queryType, resultType } from "./types";
 
-const userData = {
+export const userData = {
     firstName: "John",
     lastName: "Doe",
     username: "John_Doe",
@@ -9,35 +9,23 @@ const userData = {
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat",
 };
 
-const projects: projectType[] = [
-    {
-        projectId: 1,
-        projectName: "Project1",
-        owner: "john_Doe",
-        collections: [1],
-        description: "this is project 1 description",
+export const dummyDoc: resultType = {
+    datasource: "IEEE",
+    document: {
+        title: "",
+        affiliationCountry: [],
+        affiliationNames: [],
+        articleDate: "",
+        authorNames: [],
+        issn: "",
+        publicationName: "",
     },
-];
+    priority: 0,
+    resultId: 0,
+};
 
-const categories = [
-    {
-        projectId: 1,
-        priority: 1,
-        label: "important",
-        color: "#EF3F19",
-    },
-    {
-        projectId: 1,
-        priority: 2,
-        label: "less important",
-        color: "#ECC2BA",
-    },
-    {
-        projectId: 2,
-        priority: 1,
-        label: "interesting",
-        color: "#0B88EB",
-    },
-];
-
-export { projects, categories, userData };
+export const dummyQuery: queryType = {
+    queryId: 0,
+    searchText: "",
+    searchResults: {},
+};

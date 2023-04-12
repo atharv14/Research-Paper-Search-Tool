@@ -1,12 +1,6 @@
 import { QueryBuilderBootstrap } from "@react-querybuilder/bootstrap";
 import { useEffect, useState } from "react";
-import {
-    Field,
-    RuleGroupType,
-    Operator,
-    parseSQL,
-    update,
-} from "react-querybuilder";
+import { Field, RuleGroupType, Operator, parseSQL } from "react-querybuilder";
 import { formatQuery, QueryBuilder } from "react-querybuilder";
 import { Button, Container, Modal } from "react-bootstrap";
 import { processQueryText } from "../api/utility";
