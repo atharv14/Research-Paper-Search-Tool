@@ -2,10 +2,8 @@ import {
     categorySetType,
     categoryType,
     datasourceType,
-    queryType,
     resultDocumentType,
     resultType,
-    uniqueResultType,
 } from "./types";
 
 export const getToken = () => {
@@ -38,7 +36,7 @@ export const processQueryText = (q: string) => {
     return q.replaceAll("keyword = ", "");
 };
 
-export const filterResultsByTitle = (arr: uniqueResultType[]) => {
+export const filterResultsByTitle = (arr: resultType[]) => {
     let f: string[] = [];
     return arr.filter((n) => {
         return f.indexOf(n.document.title) == -1 && f.push(n.document.title);
@@ -76,13 +74,30 @@ export const processSearchResponse: returnProcessedSearchResponse = (
             datasource: source,
             priority: defaultCat.priority,
             document: doc,
+            resultId: 0,
         };
     });
     return processedData;
 };
 
 type returnColor = (cats: categorySetType, p: number) => string;
-export const getColor: returnColor = (cats, p) => {
+export const getCategoryColor: returnColor = (cats, p) => {
     const cat = Object.values(cats).find(({ priority }) => priority === p);
     return cat?.color || "#00000";
+};
+
+type returnLabel = (cats: categorySetType, p: number) => string;
+export const getCategoryLabel: returnLabel = (cats, p) => {
+    const cat = Object.values(cats).find(({ priority }) => priority === p);
+    return cat?.label || "";
+};
+
+export const mergeResults = (res: resultType[][]) => {
+    let mergedResults: resultType[] = [];
+    Object.values(res).forEach((iRes) => {
+        // individual res for sources
+        mergedResults = mergedResults.concat(iRes);
+    });
+    const uniqueRes = filterResultsByTitle(mergedResults);
+    return uniqueRes;
 };

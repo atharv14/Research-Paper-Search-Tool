@@ -34,10 +34,10 @@ export type queryType = {
 };
 
 export type resultDocumentType = {
-    affiliationCountry: string;
-    affiliationName: string;
+    affiliationCountry: string[];
+    affiliationNames: string[];
     articleDate: string;
-    authorName: string;
+    authorNames: string[];
     issn: string;
     publicationName: string;
     title: string;
@@ -46,12 +46,8 @@ export type resultDocumentType = {
 export type resultType = {
     datasource: datasourceType;
     priority: number;
-    resultId?: number;
+    resultId: number;
     document: resultDocumentType;
-};
-
-export type uniqueResultType = resultType & {
-    source: string;
 };
 
 export type categorySetType = {

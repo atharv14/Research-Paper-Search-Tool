@@ -1,9 +1,9 @@
 import { Button, Col, Container, Modal, Row, Table } from "react-bootstrap";
-import { resultType, uniqueResultType } from "../api/types";
+import { resultType } from "../api/types";
 
 interface cumulativeResultsTableModalProps {
     show: boolean;
-    res: uniqueResultType[];
+    res: resultType[];
     handleClose: () => void;
 }
 
@@ -31,13 +31,13 @@ const CumulativeResultsTableModal = ({
                                 </tr>
                             </thead>
                             <tbody>
-                                {res.map(({ document, source }, i) => (
+                                {res.map(({ document, datasource }, i) => (
                                     <tr key={i}>
                                         <td>{i + 1}</td>
                                         <td>{document.title}</td>
                                         <td>{document.articleDate}</td>
                                         <td>{document.issn}</td>
-                                        <td>{source.toUpperCase()}</td>
+                                        <td>{datasource}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -49,9 +49,6 @@ const CumulativeResultsTableModal = ({
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                {/* <Button variant="primary" onClick={onSaveClose}>
-                    Use Query
-                </Button> */}
             </Modal.Footer>
         </Modal>
     );

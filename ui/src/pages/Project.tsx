@@ -6,7 +6,6 @@ import { getProject } from "../api/project";
 import { getQueries } from "../api/query";
 import { categorySetType, projectType, querySetType } from "../api/types";
 import QueryAccordian from "../components/QueryAccordian";
-import { categories } from "../api/dummyData";
 import { getCategories, postCategories } from "../api/category";
 import Categories from "../components/Categories";
 
