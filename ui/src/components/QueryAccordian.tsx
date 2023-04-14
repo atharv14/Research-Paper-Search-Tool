@@ -10,7 +10,7 @@ import {
 import QueryBuilderModal from "./QueryBuilderModal";
 import QueryTab from "./QueryTab";
 import { v4 as uuidv4 } from "uuid";
-import { saveQueries } from "../api/query";
+import { postQuery } from "../api/query";
 import { useNavigate } from "react-router-dom";
 
 type QueryAccordianProps = {
@@ -89,7 +89,7 @@ const QueryAccordian = ({
 
     const saveQuery = (qId: string) => {
         setIsLoading(true);
-        saveQueries(projectId, queries[qId])
+        postQuery(projectId, queries[qId])
             .then(({ queryId, searchResults, searchText }) => {
                 setQueries({
                     ...queries,

@@ -14,11 +14,12 @@ import { FiEdit2 } from "react-icons/fi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { categorySetType, queryType, resultType } from "../api/types";
-import { getQuery } from "../api/query";
+import { getQuery, updateQuery } from "../api/query";
 import { getCategories } from "../api/category";
 import { getCategoryColor, mergeResults } from "../api/utility";
 import { CategoryLabels, CategorySymbol } from "../components/CategoryLabel";
 import { dummyQuery } from "../api/dummyData";
+import { transpileModule } from "typescript";
 
 const Query = () => {
     const [query, setQuery] = useState<queryType>(dummyQuery);
@@ -28,6 +29,7 @@ const Query = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const fetchQuery = (id: number) => {
+        setIsLoading(true);
         getQuery(id)
             .then((data) => {
                 setQuery(data);
@@ -41,6 +43,7 @@ const Query = () => {
     };
 
     const fetchCategory = (pId: number) => {
+        setIsLoading(true);
         getCategories(pId)
             .then((data) => setCategories(data))
             .catch((e) => {
@@ -50,7 +53,23 @@ const Query = () => {
             .finally(() => setIsLoading(false));
     };
 
-    const updateDocCategory = (resultId: number, priority: number) => {};
+    const updateDocCategory = (resultId: number, priority: number) => {
+        setIsLoading(true);
+        updateQuery(query.queryId, resultId, priority)
+            .then((_) => {
+                const ind = results.findIndex(
+                    (res) => res.resultId === resultId
+                );
+                let updatedResults = [...results];
+                updatedResults[ind].priority = priority;
+                setResults(updatedResults);
+            })
+            .catch((e) => {
+                alert("Something went wrong");
+                console.log(e);
+            })
+            .finally(() => setIsLoading(false));
+    };
 
     useEffect(() => {
         const id = parseInt(searchParams.get("id") || "0");

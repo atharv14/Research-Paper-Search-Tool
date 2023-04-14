@@ -28,8 +28,8 @@ const getQuery: returnQuery = async (id) => {
     console.log(resp.data);
     return resp.data;
 };
-
-const saveQueries = async (pId: number, data: queryType) => {
+type returnSavedQuery = (pId: number, data: queryType) => Promise<queryType>;
+const postQuery: returnSavedQuery = async (pId, data) => {
     const config = getConfig();
     const body = {
         projectId: pId,
@@ -43,4 +43,20 @@ const saveQueries = async (pId: number, data: queryType) => {
     return resp.data;
 };
 
-export { getQueries, saveQueries, getQuery };
+type returnUpdatedQuery = (
+    id: number,
+    resultId: number,
+    priority: number
+) => Promise<queryType>;
+const updateQuery: returnUpdatedQuery = async (id, resultId, priority) => {
+    const config = getConfig();
+    const body = [{ resultId, priority }];
+    console.log("Updating query", body);
+
+    const url = API_URI + "/queries/results/" + id;
+    const resp = await axios.patch(url, body, config);
+    console.log(resp.data);
+    return resp.data;
+};
+
+export { getQueries, postQuery, getQuery, updateQuery };

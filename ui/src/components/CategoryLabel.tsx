@@ -17,8 +17,8 @@ export const CategoryLabels = ({ categories }: CategoryLabelProps) => {
     return (
         <>
             <Row>
-                {Object.values(categories).map((cat) => (
-                    <Col>
+                {Object.values(categories).map((cat, i) => (
+                    <Col key={i}>
                         <p>
                             <CategorySymbol color={cat.color} /> {cat.label}
                         </p>

@@ -91,7 +91,9 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry corsRegistry) {
-                corsRegistry.addMapping("/**").allowedOrigins("http://localhost:3000");
+                corsRegistry.addMapping("/**")
+                .allowedMethods("*")
+                .allowedOrigins("http://localhost:3000");
             }
         };
     }
