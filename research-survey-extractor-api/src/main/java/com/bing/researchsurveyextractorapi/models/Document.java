@@ -3,6 +3,7 @@ package com.bing.researchsurveyextractorapi.models;
 import lombok.*;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
@@ -20,4 +21,5 @@ public class Document implements Serializable {
     private String publicationName;
     private String issn;
     private Collection<String> affiliationNames;
+    private String url;
 }

@@ -37,6 +37,8 @@ public class PubmedSearchService implements SearchService{
 
     @Value("${api.pubmed.fetch.url}")
     private String apiFetchUrl;
+    @Value("${api.pubmed.source.url}")
+    private String url;
 
     @Override
     public String getServiceUrl() {
@@ -145,8 +147,16 @@ public class PubmedSearchService implements SearchService{
                 if (issnNode != null) {
                     documentBuilder.issn(issnNode.asText());
                 }
+
                 //Affiliation Name
                 //Unavailable in api response
+
+                //URL
+                JsonNode uidNode = idNode.get("uid");
+                if (uidNode != null && idNode.has("uid")) {
+                    String urlLink = url + uidNode.asText();
+                    documentBuilder.url(urlLink);
+                }
 
                 documents.add(documentBuilder.build());
 

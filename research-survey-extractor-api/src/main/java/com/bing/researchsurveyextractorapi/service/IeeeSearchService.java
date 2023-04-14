@@ -80,10 +80,19 @@ public class IeeeSearchService implements SearchService{
             extractIssn(documentBuilder, articleNode);
             //Affiliation Name
             extractAffiliationName(documentBuilder, authorsNode);
+            //URL
+            extractUrl(documentBuilder, articleNode);
 
             documents.add(documentBuilder.build());
         }
         return documents;
+    }
+
+    private static void extractUrl(Document.DocumentBuilder documentBuilder, JsonNode articleNode) {
+        JsonNode urlNode = articleNode.path("html_url");
+        if (urlNode != null && articleNode.has("html_url")) {
+            documentBuilder.url(urlNode.asText());
+        }
     }
 
     private static void extractAffiliationName(Document.DocumentBuilder documentBuilder, JsonNode authorsNode) {
