@@ -162,4 +162,3 @@ public class IeeeSearchService implements SearchService{
         }
     }
 }
-// TODO: 3/31/23 implement the url attribute

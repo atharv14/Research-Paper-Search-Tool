@@ -3,7 +3,6 @@ package com.bing.researchsurveyextractorapi.models;
 import lombok.*;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 

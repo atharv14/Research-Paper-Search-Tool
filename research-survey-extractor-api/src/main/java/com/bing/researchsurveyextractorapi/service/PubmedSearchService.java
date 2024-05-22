@@ -77,9 +77,7 @@ public class PubmedSearchService implements SearchService{
         try {
             JsonNode rootNode = objectMapper.readTree(searchResponse);
             JsonNode idListNode = rootNode.path("esearchresult").path("idlist");
-            for (JsonNode idNode : idListNode) {
-                ids.add(idNode.asText());
-            }
+            for (JsonNode idNode : idListNode) ids.add(idNode.asText());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,63 +106,81 @@ public class PubmedSearchService implements SearchService{
             for (String id : ids) {
                 JsonNode idNode = resultNode.get(id);
                 //Title
-                JsonNode titleNode = idNode.get("title");
-                if (titleNode != null) {
-                    documentBuilder.title(titleNode.asText());
-                }
+                extractTitle(documentBuilder, idNode);
                 //Article Date
-                JsonNode articleDateNode = idNode.get("epubdate");
-                JsonNode pubdateNode = idNode.get("pubdate");
-                if (articleDateNode != null && !articleDateNode.isEmpty()) {
-                    documentBuilder.articleDate(articleDateNode.asText());
-                } else if (pubdateNode != null) {
-                    documentBuilder.articleDate(pubdateNode.asText());
-                }
+                extractArticleDate(documentBuilder, idNode);
                 //Authors
-                JsonNode authorsNode = idNode.path("authors");
-                if (authorsNode.isArray()) {
-                    List<String> authorNames = new ArrayList<>();
-                    for (JsonNode authorNode : authorsNode) {
-                        JsonNode nameNode = authorNode.path("name");
-                        if (nameNode != null) {
-                            String authorName = nameNode.asText();
-                            authorNames.add(authorName);
-                        }
-                    }
-                    documentBuilder.authorNames(authorNames);
-                }
-
+                extractAuthorName(documentBuilder, idNode);
                 //Affiliation Country
                 //Unavailable in api response
-
                 //Publication Name
-                JsonNode publicationNameNode = idNode.get("sorttitle");
-                if (publicationNameNode != null) {
-                    documentBuilder.publicationName(publicationNameNode.asText());
-                }
+                extractPublicationName(documentBuilder, idNode);
                 //ISSN
-                JsonNode issnNode = idNode.get("issn");
-                if (issnNode != null) {
-                    documentBuilder.issn(issnNode.asText());
-                }
-
+                extractIssn(documentBuilder, idNode);
                 //Affiliation Name
                 //Unavailable in api response
-
                 //URL
-                JsonNode uidNode = idNode.get("uid");
-                if (uidNode != null && idNode.has("uid")) {
-                    String urlLink = url + uidNode.asText();
-                    documentBuilder.url(urlLink);
-                }
+                extractUrl(documentBuilder, idNode);
 
                 documents.add(documentBuilder.build());
-
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
         return documents;
     }
+
+    private void extractUrl(Document.DocumentBuilder documentBuilder, JsonNode idNode) {
+        JsonNode uidNode = idNode.get("uid");
+        if (uidNode != null && idNode.has("uid")) {
+            String urlLink = url + uidNode.asText();
+            documentBuilder.url(urlLink);
+        }
+    }
+
+    private static void extractIssn(Document.DocumentBuilder documentBuilder, JsonNode idNode) {
+        JsonNode issnNode = idNode.get("issn");
+        if (issnNode != null) {
+            documentBuilder.issn(issnNode.asText());
+        }
+    }
+
+    private static void extractPublicationName(Document.DocumentBuilder documentBuilder, JsonNode idNode) {
+        JsonNode publicationNameNode = idNode.get("sorttitle");
+        if (publicationNameNode != null) {
+            documentBuilder.publicationName(publicationNameNode.asText());
+        }
+    }
+
+    private static void extractAuthorName(Document.DocumentBuilder documentBuilder, JsonNode idNode) {
+        JsonNode authorsNode = idNode.path("authors");
+        if (authorsNode.isArray()) {
+            List<String> authorNames = new ArrayList<>();
+            for (JsonNode authorNode : authorsNode) {
+                JsonNode nameNode = authorNode.path("name");
+                if (nameNode != null) {
+                    String authorName = nameNode.asText();
+                    authorNames.add(authorName);
+                }
+            }
+            documentBuilder.authorNames(authorNames);
+        }
+    }
+
+    private static void extractArticleDate(Document.DocumentBuilder documentBuilder, JsonNode idNode) {
+        JsonNode articleDateNode = idNode.get("epubdate");
+        JsonNode pubdateNode = idNode.get("pubdate");
+        if (articleDateNode != null && !articleDateNode.isEmpty()) {
+            documentBuilder.articleDate(articleDateNode.asText());
+        } else if (pubdateNode != null) {
+            documentBuilder.articleDate(pubdateNode.asText());
+        }
+    }
+
+    private static void extractTitle(Document.DocumentBuilder documentBuilder, JsonNode idNode) {
+        JsonNode titleNode = idNode.get("title");
+        if (titleNode != null) {
+            documentBuilder.title(titleNode.asText());
+        }
+    }
 }
-// TODO: 3/31/23 Implement the url attribute

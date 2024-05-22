@@ -39,7 +39,7 @@ export const processQueryText = (q: string) => {
 export const filterResultsByTitle = (arr: resultType[]) => {
     let f: string[] = [];
     return arr.filter((n) => {
-        return f.indexOf(n.document.title) == -1 && f.push(n.document.title);
+        return f.indexOf(n.document.title) === -1 && f.push(n.document.title);
     });
 };
 

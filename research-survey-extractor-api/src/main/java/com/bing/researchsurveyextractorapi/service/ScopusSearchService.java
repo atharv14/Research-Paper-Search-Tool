@@ -60,68 +60,28 @@ public class ScopusSearchService implements SearchService {
 
             for(JsonNode entry : entries){
                 //Title
-                JsonNode titleNode = entry.get("dc:title");
-                if (titleNode != null)
-                    documentBuilder.title(titleNode.asText());
+                extractTitle(documentBuilder, entry);
 
                 //Article Date
-                JsonNode articleDateNode = entry.get("prism:coverDate");
-                if (articleDateNode != null){
-                    documentBuilder.articleDate(articleDateNode.asText());
-                }
+                extractArticleDate(documentBuilder, entry);
 
                 //authorName
-                JsonNode authorNameNode = entry.get("dc:creator");
-                if (authorNameNode != null){
-                    List<String> authorNames = Collections.singletonList(authorNameNode.asText());
-                    documentBuilder.authorNames(authorNames);
-                }
+                extractAuthorName(documentBuilder, entry);
 
                 //affiliationCountry
-                JsonNode affiliationNode = entry.path("affiliation");
-                if (affiliationNode.isArray()) {
-                    Set<String> affiliationCountries = new HashSet<>();
-                    for (JsonNode affiliation : affiliationNode) {
-                        JsonNode countryNode = affiliation.path("affiliation-country");
-                        if (countryNode != null && !countryNode.asText().isEmpty()) {
-                            affiliationCountries.add(countryNode.asText());
-                        }
-                    }
-                    documentBuilder.affiliationCountry(affiliationCountries);
-                }
+                JsonNode affiliationNode = extractAffiliationCountry(documentBuilder, entry);
 
                 //publicationName
-                JsonNode pubNameNode = entry.get("prism:publicationName");
-                if (pubNameNode != null){
-                    documentBuilder.publicationName(pubNameNode.asText());
-                }
+                extractPublicationName(documentBuilder, entry);
 
                 //issn
-                String prismeIssn = "prism:eIssn";
-                String prismIssn = "prism:issn";
-                if (entry.has(prismeIssn) && entry.get(prismeIssn).isTextual()){
-                    documentBuilder.issn(entry.get(prismeIssn).asText());
-                } else if (entry.has(prismIssn) && entry.get(prismIssn).isTextual()) {
-                    documentBuilder.issn(entry.get(prismIssn).asText());
-                }
+                extractIssn(documentBuilder, entry);
 
                 //affiliationName
-                if (affiliationNode.isArray()) {
-                    Set<String> affiliationNames = new HashSet<>();
-                    for (JsonNode affiliation : affiliationNode) {
-                        JsonNode affNameNode = affiliation.path("affilname");
-                        if (affNameNode != null && !affNameNode.asText().isEmpty()) {
-                            affiliationNames.add(affNameNode.asText());
-                        }
-                    }
-                    documentBuilder.affiliationNames(new ArrayList<>(affiliationNames));
-                }
+                extractAffiliationName(documentBuilder, affiliationNode);
 
                 //url
-                JsonNode prismUrl = entry.get("prism:url");
-                if (entry.has("prism:url") && prismUrl != null) {
-                    documentBuilder.url(prismUrl.asText());
-                }
+                extractUrl(documentBuilder, entry);
 
                 documents.add(documentBuilder.build());
             }
@@ -131,5 +91,77 @@ public class ScopusSearchService implements SearchService {
         }
         return documents;
     }
+
+    private static void extractUrl(Document.DocumentBuilder documentBuilder, JsonNode entry) {
+        JsonNode prismUrl = entry.get("prism:url");
+        if (entry.has("prism:url") && prismUrl != null) {
+            documentBuilder.url(prismUrl.asText());
+        }
+    }
+
+    private static void extractAffiliationName(Document.DocumentBuilder documentBuilder, JsonNode affiliationNode) {
+        if (affiliationNode.isArray()) {
+            Set<String> affiliationNames = new HashSet<>();
+            for (JsonNode affiliation : affiliationNode) {
+                JsonNode affNameNode = affiliation.path("affilname");
+                if (affNameNode != null && !affNameNode.asText().isEmpty()) {
+                    affiliationNames.add(affNameNode.asText());
+                }
+            }
+            documentBuilder.affiliationNames(new ArrayList<>(affiliationNames));
+        }
+    }
+
+    private static void extractIssn(Document.DocumentBuilder documentBuilder, JsonNode entry) {
+        String prismeIssn = "prism:eIssn";
+        String prismIssn = "prism:issn";
+        if (entry.has(prismeIssn) && entry.get(prismeIssn).isTextual()){
+            documentBuilder.issn(entry.get(prismeIssn).asText());
+        } else if (entry.has(prismIssn) && entry.get(prismIssn).isTextual()) {
+            documentBuilder.issn(entry.get(prismIssn).asText());
+        }
+    }
+
+    private static void extractPublicationName(Document.DocumentBuilder documentBuilder, JsonNode entry) {
+        JsonNode pubNameNode = entry.get("prism:publicationName");
+        if (pubNameNode != null){
+            documentBuilder.publicationName(pubNameNode.asText());
+        }
+    }
+
+    private static JsonNode extractAffiliationCountry(Document.DocumentBuilder documentBuilder, JsonNode entry) {
+        JsonNode affiliationNode = entry.path("affiliation");
+        if (affiliationNode.isArray()) {
+            Set<String> affiliationCountries = new HashSet<>();
+            for (JsonNode affiliation : affiliationNode) {
+                JsonNode countryNode = affiliation.path("affiliation-country");
+                if (countryNode != null && !countryNode.asText().isEmpty()) {
+                    affiliationCountries.add(countryNode.asText());
+                }
+            }
+            documentBuilder.affiliationCountry(affiliationCountries);
+        }
+        return affiliationNode;
+    }
+
+    private static void extractAuthorName(Document.DocumentBuilder documentBuilder, JsonNode entry) {
+        JsonNode authorNameNode = entry.get("dc:creator");
+        if (authorNameNode != null){
+            List<String> authorNames = Collections.singletonList(authorNameNode.asText());
+            documentBuilder.authorNames(authorNames);
+        }
+    }
+
+    private static void extractArticleDate(Document.DocumentBuilder documentBuilder, JsonNode entry) {
+        JsonNode articleDateNode = entry.get("prism:coverDate");
+        if (articleDateNode != null){
+            documentBuilder.articleDate(articleDateNode.asText());
+        }
+    }
+
+    private static void extractTitle(Document.DocumentBuilder documentBuilder, JsonNode entry) {
+        JsonNode titleNode = entry.get("dc:title");
+        if (titleNode != null)
+            documentBuilder.title(titleNode.asText());
+    }
 }
-// TODO: 3/31/23 Implement the url attribute

@@ -10,7 +10,7 @@ const AuthTabs = () => {
     const navigate = useNavigate();
     useEffect(() => {
         if (isUserLoggedIn()) navigate("/");
-    }, []);
+    }, [navigate]);
 
     const toggleTab = () => {
         setLogginIn(!loggingIn);

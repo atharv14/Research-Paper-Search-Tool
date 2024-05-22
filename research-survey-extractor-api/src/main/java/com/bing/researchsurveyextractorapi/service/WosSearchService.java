@@ -89,55 +89,24 @@ public class WosSearchService implements SearchService {
             JsonNode dataNode = root.path("Data");
             for (JsonNode documentNode : dataNode) {
                 //Title
-                JsonNode titleNode = documentNode.get("Title").get("Title").get(0);
-                if (titleNode != null){
-                    documentBuilder.title(titleNode.asText());
-                }
+                extractTitle(documentBuilder, documentNode);
                 //Article Date
-                JsonNode sourceNode = documentNode.path("Source");
-                JsonNode dateNode = sourceNode.path("Published.BiblioDate").get(0);
-                JsonNode yearNode = sourceNode.path("Published.BiblioYear").get(0);
-                if (dateNode != null && yearNode != null) {
-                    String date = String.join(",", dateNode.asText(), yearNode.asText());
-                    documentBuilder.articleDate(date);
-                } else if (dateNode == null) {
-                    documentBuilder.articleDate(yearNode.asText());
-                }
+                extractArticleDate(documentBuilder, documentNode);
                 //Author Name
-                JsonNode authorNameNode = documentNode.path("Author").path("Authors");
-                if (authorNameNode != null && authorNameNode.isArray()){
-                    List<String> authorNames = StreamSupport.stream(authorNameNode.spliterator(), false)
-                            .map(JsonNode::asText)
-                            .collect(Collectors.toList());
-                    documentBuilder.authorNames(authorNames);
-                }
+                extractAuthorName(documentBuilder, documentNode);
                 //Affiliation Country
                 // Unable to retrieve it from the JSON response
 
                 //Publication Name
-                JsonNode publicationNameNode = documentNode.get("Source").get("SourceTitle").get(0);
-                if (publicationNameNode != null){
-                    documentBuilder.publicationName(publicationNameNode.asText());
-                }
+                extractPublicationName(documentBuilder, documentNode);
                 //Issn
-                JsonNode otherNode = documentNode.path("Other");
-                String identifierEissn = "Identifier.Eissn";
-                String identifierIssn = "Identifier.Issn";
-                if (otherNode.has(identifierEissn)){
-                    documentBuilder.issn(otherNode.get(identifierEissn).get(0).asText());
-                } else if (otherNode.has(identifierIssn)) {
-                    documentBuilder.issn(otherNode.get(identifierIssn).get(0).asText());
-                }
+                extractIssn(documentBuilder, documentNode);
 
                 //Affiliation Name
                 // Unable to retrieve it from the JSON response
 
                 //URL
-                JsonNode utNode = documentNode.get("UT");
-                if (utNode != null && documentNode.has("UT")) {
-                    String urlLink = url + utNode.asText();
-                    documentBuilder.url(urlLink);
-                }
+                extractUrl(documentBuilder, documentNode);
 
                 documents.add(documentBuilder.build());
 
@@ -147,5 +116,59 @@ public class WosSearchService implements SearchService {
         }
         return documents;
     }
+
+    private void extractUrl(Document.DocumentBuilder documentBuilder, JsonNode documentNode) {
+        JsonNode utNode = documentNode.get("UT");
+        if (utNode != null && documentNode.has("UT")) {
+            String urlLink = url + utNode.asText();
+            documentBuilder.url(urlLink);
+        }
+    }
+
+    private static void extractIssn(Document.DocumentBuilder documentBuilder, JsonNode documentNode) {
+        JsonNode otherNode = documentNode.path("Other");
+        String identifierEissn = "Identifier.Eissn";
+        String identifierIssn = "Identifier.Issn";
+        if (otherNode.has(identifierEissn)){
+            documentBuilder.issn(otherNode.get(identifierEissn).get(0).asText());
+        } else if (otherNode.has(identifierIssn)) {
+            documentBuilder.issn(otherNode.get(identifierIssn).get(0).asText());
+        }
+    }
+
+    private static void extractPublicationName(Document.DocumentBuilder documentBuilder, JsonNode documentNode) {
+        JsonNode publicationNameNode = documentNode.get("Source").get("SourceTitle").get(0);
+        if (publicationNameNode != null){
+            documentBuilder.publicationName(publicationNameNode.asText());
+        }
+    }
+
+    private static void extractAuthorName(Document.DocumentBuilder documentBuilder, JsonNode documentNode) {
+        JsonNode authorNameNode = documentNode.path("Author").path("Authors");
+        if (authorNameNode != null && authorNameNode.isArray()){
+            List<String> authorNames = StreamSupport.stream(authorNameNode.spliterator(), false)
+                    .map(JsonNode::asText)
+                    .collect(Collectors.toList());
+            documentBuilder.authorNames(authorNames);
+        }
+    }
+
+    private static void extractArticleDate(Document.DocumentBuilder documentBuilder, JsonNode documentNode) {
+        JsonNode sourceNode = documentNode.path("Source");
+        JsonNode dateNode = sourceNode.path("Published.BiblioDate").get(0);
+        JsonNode yearNode = sourceNode.path("Published.BiblioYear").get(0);
+        if (dateNode != null && yearNode != null) {
+            String date = String.join(",", dateNode.asText(), yearNode.asText());
+            documentBuilder.articleDate(date);
+        } else if (dateNode == null) {
+            documentBuilder.articleDate(yearNode.asText());
+        }
+    }
+
+    private static void extractTitle(Document.DocumentBuilder documentBuilder, JsonNode documentNode) {
+        JsonNode titleNode = documentNode.get("Title").get("Title").get(0);
+        if (titleNode != null){
+            documentBuilder.title(titleNode.asText());
+        }
+    }
 }
-// TODO: 3/31/23 implement url and implement article date and year
